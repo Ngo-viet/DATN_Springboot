@@ -24,14 +24,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
   selector: 'user-profile',
   templateUrl: './user.profile.component.html',
   styleUrls: ['./user.profile.component.scss'],
-  standalone: true,
-  imports: [
-    FooterComponent,
-    HeaderComponent,
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-  ],
+
+
 })
 export class UserProfileComponent implements OnInit {
   userResponse?: UserResponse;
@@ -57,7 +51,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     debugger
-    this.token = this.tokenService.getToken();
+    this.token = <string>this.tokenService.getToken();
     this.userService.getUserDetail(this.token).subscribe({
       next: (response: any) => {
         debugger
