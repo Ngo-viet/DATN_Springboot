@@ -22,7 +22,7 @@ export class AuthGuard {
     const isUserIdValid = this.tokenService.getUserId() > 0;
 
     debugger
-    if (!isTokenExpired && !isUserIdValid) {
+    if (!isTokenExpired && isUserIdValid) {
       return true;
     } else {
       // Nếu không authenticated, bạn có thể redirect hoặc trả về một UrlTree khác.

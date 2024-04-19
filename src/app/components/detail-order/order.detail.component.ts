@@ -4,10 +4,11 @@ import {CartService} from "../../services/cart.service";
 import {ProductService} from "../../services/product.service";
 import {environment} from "../../environments/environment";
 import {OrderService} from "../../services/order.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ApiResponse} from "../../responses/api.response";
 import {OrderDetail} from "../../models/order.detail";
 import {OrderResponse} from "../../responses/order/order.response";
+import {TokenService} from "../../services/token.service";
 
 @Component({
   selector: 'app-order-detail',
@@ -33,58 +34,64 @@ export class OrderDetailComponent implements OnInit{
     order_details: [] // Một mảng rỗng
 
   }
+  orders: any[] = [];
+
   constructor(
     private orderService: OrderService,
+    private router: Router,
+    private tokenService: TokenService
   ) {}
   ngOnInit():void {
-    this.getOrderDetails();
+    const userId = this.tokenService.getUserId();
+    this.getOrdersByUserId(userId);
   }
+  recipientInfoDisplayed: boolean = false;
 
-  getOrderDetails(): void {
-    debugger
-    //const orderId = Number(this.route.snapshot.paramMap.get('orderId'));
-    const orderId = 3;
-    this.orderService.getOrderById(orderId).subscribe({
+  getOrdersByUserId(userId: number): void {
+    this.orderService.getOrdersByUserId(userId).subscribe({
       next: (response: any) => {
-        debugger;
+        if (Array.isArray(response) && response.length > 0) {
+          this.orders = response.map((order: any) => ({
+            id: order.id,
+            user_id: order.user.id,
+            fullname: order.user.fullName,
+            email: order.user.email,
+            phone_number: order.user.phoneNumber,
+            address: order.user.address,
+            note: order.note,
+            order_date: new Date(order.orderDate[0], order.orderDate[1] - 1, order.orderDate[2]),
+            order_details: order.orderDetails.map((orderDetail: any) => ({
+              ...orderDetail,
+              total_money: orderDetail.price * orderDetail.numberOfProducts,
+              product: {
+                ...orderDetail.product,
+                thumbnail: `${environment.apiBaseUrl}/products/images/${orderDetail.product.thumbnail}`
+              },
 
-        this.orderResponse.id = response.id;
-        this.orderResponse.user_id = response.user_id;
-        this.orderResponse.fullname = response.fullname;
-        this.orderResponse.email = response.email;
-        this.orderResponse.phone_number = response.phone_number;
-        this.orderResponse.address = response.address;
-        this.orderResponse.note = response.note;
-        this.orderResponse.order_date = new Date(
-          response.order_date[0],
-          response.order_date[1] - 1,
-          response.order_date[2]
-        );
-
-        this.orderResponse.order_details = response.order_details
-          .map((order_detail: OrderDetail) => {
-            order_detail.product.thumbnail = `${environment.apiBaseUrl}/products/images/${order_detail.product.thumbnail}`;
-            return order_detail;
-          });
-        this.orderResponse.payment_method = response.payment_method;
-        this.orderResponse.shipping_date = new Date(
-          response.shipping_date[0],
-          response.shipping_date[1] - 1,
-          response.shipping_date[2]
-        );
-
-        this.orderResponse.shipping_method = response.shipping_method;
-
-        this.orderResponse.status = response.status;
-        this.orderResponse.total_money = response.total_money;
-      },
-      complete: () => {
-        debugger;
+            })),
+            payment_method: order.paymentMethod,
+            shipping_date: order.shippingDate ? new Date(order.shippingDate[0], order.shippingDate[1] - 1, order.shippingDate[2]) : null,
+            shipping_method: order.shippingMethod,
+            status: order.status,
+            total_money: order.totalMoney
+          }));
+        } else {
+          // Xử lý trường hợp response rỗng
+          console.error('Empty or invalid response:', response);
+        }
       },
       error: (error: any) => {
-        debugger;
-        console.error('Error fetching detail:', error);
+        console.error('Error fetching user orders:', error);
+        // Thông báo lỗi cho người dùng hoặc xử lý lỗi khác tùy theo trường hợp
       }
     });
   }
+
+
+  goToHomePage() {
+    this.router.navigate(['/']); // Điều hướng về trang chủ
+  }
+
+
+
 }

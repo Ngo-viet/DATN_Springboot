@@ -6,9 +6,9 @@
   <div class="d-flex align-items-center justify-content-between">
     <a href="index.html" class="logo d-flex align-items-center">
       <img src="assets/img/logo.png" alt="">
-      <span class="d-none d-lg-block">Trang Admin</span>
+      <span class="ms-2 d-none d-lg-block">Trang quản lý</span>
     </a>
-    <i class="bi bi-list toggle-sidebar-btn"></i>
+    <i class="bi bi-list toggle-sidebar-btn" style="color: white"></i>
   </div><!-- End Logo -->
 
   <div class="search-bar">
@@ -30,7 +30,7 @@
       <li class="nav-item dropdown">
 
         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-bell"></i>
+          <i class="bi bi-bell" style="color: white"></i>
           <span class="badge bg-primary badge-number">4</span>
         </a><!-- End Notification Icon -->
 
@@ -72,7 +72,7 @@
       <li class="nav-item dropdown">
 
         <a class="nav-link nav-icon" href="#" data-bs-toggle="dropdown">
-          <i class="bi bi-chat-left-text"></i>
+          <i class="bi bi-chat-left-text" style="color: white"></i>
           <span class="badge bg-success badge-number">3</span>
         </a><!-- End Messages Icon -->
 
@@ -163,13 +163,13 @@
     </li><!-- End Dashboard Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" (click)="showAdminComponent('orders')">
-        <i class="bi bi-menu-button-wide"></i><span>Quản lý đơn hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" data-bs-target="#components-nav" (click)="showAdminComponent('users')" data-bs-toggle="collapse" >
+        <i class="bi bi-menu-button-wide"></i><span>Quản lý người dùng</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="components-alerts.html">
-            <i class="bi bi-circle"></i><span>Alerts</span>
+          <a href="components-alerts.html" routerLink="/admin/users">
+            <i class="bi bi-circle"></i><span>Danh sách người dùng</span>
           </a>
         </li>
 
@@ -179,13 +179,13 @@
     </li><!-- End Components Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#forms-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-journal-text"></i><span>Forms</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" data-bs-target="#forms-nav"  data-bs-toggle="collapse" href="#">
+        <i class="bi bi-journal-text"></i><span>Quản lý sản phẩm</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="forms-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="forms-elements.html">
-            <i class="bi bi-circle"></i><span>Form Elements</span>
+          <a href="forms-elements.html" routerLink="/admin/products" (click)="showAdminComponent('products')">
+            <i class="bi bi-circle"></i><span>Danh sách sản phẩm</span>
           </a>
         </li>
 
@@ -193,13 +193,13 @@
     </li><!-- End Forms Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#tables-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-layout-text-window-reverse"></i><span>Tables</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" data-bs-target="#tables-nav" (click)="showAdminComponent('orders')" data-bs-toggle="collapse" href="#">
+        <i class="bi bi-layout-text-window-reverse" ></i><span>Quản lý đơn hàng</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="tables-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="tables-general.html">
-            <i class="bi bi-circle"></i><span>General Tables</span>
+          <a href="tables-general.html" >
+            <i class="bi bi-circle"></i><span>Danh sách đơn hàng</span>
           </a>
         </li>
         <li>
@@ -211,12 +211,13 @@
     </li><!-- End Tables Nav -->
 
     <li class="nav-item">
-      <a class="nav-link collapsed" data-bs-target="#charts-nav" data-bs-toggle="collapse" href="#">
-        <i class="bi bi-bar-chart"></i><span>Charts</span><i class="bi bi-chevron-down ms-auto"></i>
+      <a class="nav-link collapsed" data-bs-target="#charts-nav"  data-bs-toggle="collapse" href="#">
+        <i class="bi bi-bar-chart"></i><span>Quản lý thể loại</span><i class="bi bi-chevron-down ms-auto"></i>
       </a>
       <ul id="charts-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
         <li>
-          <a href="charts-chartjs.html">
+          <a href="charts-chartjs.html" (click)="showAdminComponent('categories')"
+             routerLink="/admin/categories">
             <i class="bi bi-circle"></i><span>Chart.js</span>
           </a>
         </li>
@@ -264,28 +265,29 @@
 
 <main id="main" class="main">
 
-  <div class="pagetitle">
-    <h1>Dashboard</h1>
-    <nav>
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-        <li class="breadcrumb-item active">Dashboard</li>
-      </ol>
-    </nav>
-  </div><!-- End Page Title -->
+<!--  <div class="pagetitle">-->
+<!--    <h1>Dashboard</h1>-->
+<!--    <nav>-->
+<!--      <ol class="breadcrumb">-->
+<!--        <li class="breadcrumb-item"><a href="index.html">Home</a></li>-->
+<!--        <li class="breadcrumb-item active">Dashboard</li>-->
+<!--      </ol>-->
+<!--    </nav>-->
+<!--  </div>&lt;!&ndash; End Page Title &ndash;&gt;-->
 
   <section class="section dashboard">
     <div class="row">
 
       <!-- Left side columns -->
-      <div class="col-lg-8">
+      <div class="col-lg-12">
         <div class="row">
-          <ng-container [ngSwitch]="adminComponent" >
-            <app-order-admin *ngSwitchCase="'orders'"></app-order-admin>
-            <app-product-admin *ngSwitchCase="'products'"></app-product-admin>
-          </ng-container>
+<!--          <ng-container [ngSwitch]="adminComponent" >-->
+<!--            <app-order-admin *ngSwitchCase="'orders'"></app-order-admin>-->
+<!--            <app-product-admin *ngSwitchCase="'products'"></app-product-admin>-->
+<!--            <app-category-admin *ngSwitchCase="'categories'"></app-category-admin>-->
+<!--          </ng-container>-->
 
-
+    <router-outlet></router-outlet>
 
 
 

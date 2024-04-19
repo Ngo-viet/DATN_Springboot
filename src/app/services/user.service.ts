@@ -9,6 +9,7 @@ import {UserResponse} from "../responses/user/user.response";
 import {LocalStorageService} from 'ngx-webstorage';
 import {UpdateUserDTO} from "../dtos/user/update.user.dto";
 import {ApiResponse} from "../responses/api.response";
+import {User} from "../models/user";
 @Injectable({
   providedIn: 'root'
 })
@@ -99,6 +100,21 @@ export class UserService {
       console.error('Error removing user data from local storage:', error);
       // Handle the error as needed
     }
+  }
+
+  getUsers(params: { page: number, limit: number, keyword: string }): Observable<User[]> {
+    const url = `${environment.apiBaseUrl}/users`;
+    return this.http.get<User[]>(url, { params: params });
+  }
+
+  resetPassword(userId: number): Observable<any> {
+    const url = `${environment.apiBaseUrl}/users/reset-password/${userId}`;
+    return this.http.put<any>(url, null, this.apiConfig);
+  }
+
+  toggleUserStatus(params: { userId: number, enable: boolean }): Observable<any> {
+    const url = `${environment.apiBaseUrl}/users/block/${params.userId}/${params.enable ? '1' : '0'}`;
+    return this.http.put<any>(url, null, this.apiConfig);
   }
 
 }

@@ -31,6 +31,7 @@ export class AdminComponent implements OnInit {
     // Default router
     debugger
     if (this.router.url === '/admin') {
+      // sua duong dan hien thi trang dau tien
       this.router.navigate(['/admin/orders']);
     }
   }

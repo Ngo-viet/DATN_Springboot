@@ -4,7 +4,7 @@ import {ProductService} from "../../services/product.service";
 import {environment} from "../../environments/environment";
 import {ProductImage} from "../../models/product.image";
 import {CartService} from "../../services/cart.service";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-detail-product',
@@ -16,10 +16,12 @@ export class DetailProductComponent implements OnInit {
   productId: number = 0;
   currentImageIndex: number = 0;
   quantity: number = 1;
+  isPressedAddToCart:boolean = false;
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
   ){}
   ngOnInit(){
     //Lay productId tu Url
@@ -62,7 +64,7 @@ export class DetailProductComponent implements OnInit {
       if(index < 0){
         index = 0;
       }else if(index >= this.product.product_images.length){
-        index = this.product.product_images.length -1;
+        index = this.product.product_images.length - 1;
       }
 
       //Gan index hien tai va cap nhat anh hien tai
@@ -78,12 +80,13 @@ export class DetailProductComponent implements OnInit {
     debugger
     this.showImage(this.currentImageIndex + 1);
   }
-  previuosImage(): void{
+  previousImage(): void{
     debugger
     this.showImage(this.currentImageIndex - 1);
   }
   addToCart(): void{
     debugger
+    this.isPressedAddToCart = true;
     if(this.product){
       this.cartService.addToCart(this.product.id, this.quantity);
     }else{
@@ -100,7 +103,17 @@ export class DetailProductComponent implements OnInit {
       this.quantity--;
     }
   }
-  buyNow(){
 
+  getTotalPrice(): number {
+    if (this.product){
+      return this.product.price * this.quantity;
+    }
+    return 0;
+  }
+  buyNow(){
+    if(this.isPressedAddToCart == false) {
+      this.addToCart();
+    }
+    this.router.navigate(['/orders']);
   }
 }

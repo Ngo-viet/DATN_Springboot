@@ -37,64 +37,27 @@
       <ul>
         <li><a class="nav-link scrollto active" routerLink="/">Trang chủ</a></li>
         <li><a class="nav-link scrollto" href="#about">Giới thiệu</a></li>
-        <li class="dropdown"><a href="#"><span>Sản phẩm</span> <i class="bi bi-chevron-down"></i></a>
-          <ul>
-            <li class="dropdown"><a href="#"><span>Nước hoa nam</span> <i class="bi bi-chevron-right"></i></a>
-              <ul>
-                <li><a href="#">Nhóm hương</a></li>
-                <li><a href="#">Nồng độ</a></li>
-                <li><a href="#">Dung tích</a></li>
-                <li><a href="#">Quốc gia</a></li>
-              </ul>
+        <li   class="dropdown"><a routerLink="/product-list"><span>Sản phẩm</span> <i class="bi bi-chevron-down"></i></a>
+          <ul >
+            <li class="dropdown" *ngFor="let item of categories">
+              <a [routerLink]="['/product-list']" [queryParams]="{categoryId: item.id}" type="button"><span>{{item.name}}</span></a>
             </li>
-            <li class="dropdown"><a href="#"><span>Nước hoa nữ</span> <i class="bi bi-chevron-right"></i></a>
-              <ul>
-                <li><a href="#">Nhóm hương</a></li>
-                <li><a href="#">Nồng độ</a></li>
-                <li><a href="#">Dung tích</a></li>
-                <li class="dropdown" ><a href="#"><span>Quốc gia </span> <i class="bi bi-chevron-right"></i></a>
-                  <ul>
-                    <li><a href="#">Pháp</a></li>
-                    <li><a href="#">Mỹ</a></li>
-                    <li><a href="#">Hàn Quốc</a></li>
-                    <li><a href="#">Singapore</a></li>
-                  </ul>
-                </li>
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#"><span>Nước hoa unisex</span> <i class="bi bi-chevron-right"></i></a>
-              <ul>
-                <li><a href="#">Nhóm hương</a></li>
-                <li><a href="#">Nồng độ</a></li>
-                <li><a href="#">Dung tích</a></li>
-                <li><a href="#">Quốc gia</a></li>
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#"><span>Nước hoa mini</span> <i class="bi bi-chevron-right"></i></a>
-              <ul>
-                <li><a href="#">Nhóm hương</a></li>
-                <li><a href="#">Nồng độ</a></li>
-                <li><a href="#">Dung tích</a></li>
-                <li><a href="#">Quốc gia</a></li>
-              </ul>
-            </li>
-            <li class="dropdown"><a href="#"><span>Set nước hoa</span> <i class="bi bi-chevron-right"></i></a></li>
           </ul>
         </li>
         <li><a class="nav-link scrollto " href="#portfolio">Thương hiệu</a></li>
 
         <li><a class="nav-link scrollto" href="#contact">Liên hệ</a></li>
 
-<!--        <form  class="input-group ms-5 " name="frmSearch"  id="frmSearch">-->
-<!--          <input class="form-control " type="text" placeholder="Tìm sản phẩm" [(ngModel)]="keyword" name="searchInput">-->
-<!--          <select class="form-control product-category" [(ngModel)]="selectedCategoryId" name="category">-->
-<!--            <option [value]="0">Tất cả</option>-->
-<!--            <option *ngFor="let category of categories" [value]="category.id">-->
-<!--              {{ category.name }}-->
-<!--            </option>-->
-<!--          </select>-->
-<!--          <button class="btn btn-search " (click)="searchProducts()"><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>-->
-<!--        </form>-->
+        <form  class="input-group ms-2 search-form" (submit)="onSearch()" name="frmSearch"  id="frmSearch">
+          <input class="form-control " type="text" placeholder="Tìm sản phẩm" [(ngModel)]="keyword" name="searchInput">
+          <select class="form-control product-category" [(ngModel)]="selectedCategoryId" name="category">-->
+            <option [value]="0">Tất cả</option>
+            <option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </option>
+          </select>
+          <button class="btn btn-search" type="submit" ><i class="fa-sharp fa-solid fa-magnifying-glass"></i></button>
+        </form>
 
 
       </ul>
@@ -109,6 +72,7 @@
                 </a>
                 <div class="dropdown-content" *ngIf="userResponse">
                   <a class="popover-item" (click)="handleItemClick(0)">Tài khoản của tôi</a>
+                  <a class="popover-item" (click)="handleItemClick(1)">Đơn mua</a>
                   <a class="popover-item" (click)="handleItemClick(2)">Đăng xuất</a>
                 </div>
               </div>

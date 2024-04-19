@@ -21,6 +21,7 @@ import { ApiResponse } from '../../../responses/api.response';
 export class ProductAdminComponent implements OnInit {
   selectedCategoryId: number  = 0; // Giá trị category được chọn
   products: Product[] = [];
+  // product?: Product;
   currentPage: number = 0;
   itemsPerPage: number = 12;
   pages: number[] = [];
@@ -28,6 +29,7 @@ export class ProductAdminComponent implements OnInit {
   visiblePages: number[] = [];
   keyword:string = "";
   localStorage?:Storage;
+  currentImageIndex: number = 0;
 
   private productService = inject(ProductService);
   private router = inject(Router);
@@ -57,8 +59,8 @@ export class ProductAdminComponent implements OnInit {
       next: (response: any) => {
         debugger
         response.products.forEach((product: Product) => {
-          if (product) {
-            product.url = `${environment.apiBaseUrl}/products/images/${product.thumbnail}`;
+          if (product && product.product_images && product.product_images.length > 0) {
+            product.url = `${environment.apiBaseUrl}/products/images/${product.product_images[0].image_url}`;
           }
         });
         this.products = response.products;
@@ -79,6 +81,13 @@ export class ProductAdminComponent implements OnInit {
     this.currentPage = page < 0 ? 0 : page;
     this.localStorage?.setItem('currentProductAdminPage', String(this.currentPage));
     this.getProducts(this.keyword, this.selectedCategoryId, this.currentPage, this.itemsPerPage);
+  }
+
+  getThumbnail(product: Product):void {
+    // Kiểm tra xem sản phẩm có product_images không
+    if (product && product.product_images && product.product_images.length > 0) {
+       product.product_images[0].image_url; // Lấy URL của hình ảnh đầu tiên từ product_images
+    }
   }
 
   generateVisiblePageArray(currentPage: number, totalPages: number): number[] {
@@ -102,33 +111,46 @@ export class ProductAdminComponent implements OnInit {
     // Điều hướng đến trang detail-product với productId là tham số
     this.router.navigate(['/admin/products/insert']);
   }
-
+  // showImage(index: number):void{
+  //   debugger
+  //   if(this.products && this.products. && product.product_images.length > 0){
+  //     if(index < 0){
+  //       index = 0;
+  //     }else if(index >= this.products.product_images.length){
+  //       index = this.products.product_images.length - 1;
+  //     }
+  //
+  //     //Gan index hien tai va cap nhat anh hien tai
+  //     this.currentImageIndex = index;
+  //   }
+  // }
   // Hàm xử lý sự kiện khi sản phẩm được bấm vào
   updateProduct(productId: number) {
     debugger
     // Điều hướng đến trang detail-product với productId là tham số
     this.router.navigate(['/admin/products/update', productId]);
   }
-  // deleteProduct(product: Product) {
-  //   const confirmation = window
-  //     .confirm('Are you sure you want to delete this product?');
-  //   if (confirmation) {
-  //     debugger
-  //     this.productService.deleteProduct(product.id).subscribe({
-  //       next: (apiResponse: ApiResponse) => {
-  //         debugger
-  //         alert('Xóa thành công')
-  //         location.reload();
-  //       },
-  //       complete: () => {
-  //         debugger;
-  //       },
-  //       error: (error: any) => {
-  //         debugger;
-  //         alert(error.error)
-  //         console.error('Error fetching products:', error);
-  //       }
-  //     });
-  //   }
-  // }
+
+  deleteProduct(product: Product) {
+    const confirmation = window
+      .confirm('Are you sure you want to delete this product?');
+    if (confirmation) {
+      debugger
+      this.productService.deleteProduct(product.id).subscribe({
+        next: (response: any) => {
+          debugger
+          alert('Xóa thành công')
+          location.reload();
+        },
+        complete: () => {
+          debugger;
+        },
+        error: (error: any) => {
+          debugger;
+          alert(error.error)
+          console.error('Error fetching products:', error);
+        }
+      });
+    }
+  }
 }

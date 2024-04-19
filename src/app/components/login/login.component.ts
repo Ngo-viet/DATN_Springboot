@@ -23,7 +23,7 @@ export class LoginComponent {
   // password: string= '1234567';
 
   //Login Admin
-  phoneNumber: string = '123456789';
+  phoneNumber: string = '0123789456';
   password: string= '123456';
 
   roles: Role[] = []; //Manảng roles
@@ -43,17 +43,17 @@ export class LoginComponent {
   ngOnInit(){
     //Gọi api lấy danh sách roles và lưu vào biến roles
     debugger
-    this.roleService.getRoles().subscribe({
-      next: (roles: Role[]) => {
-        debugger
-        this.roles = roles;
-        this.selectedRole = roles.length > 0 ? roles[0] : undefined;
-      },
-      error: (error: any) => {
-        debugger
-        console.error('Error getting roles: ', error);
-      }
-    });
+    // this.roleService.getRoles().subscribe({
+    //   next: (roles: Role[]) => {
+    //     debugger
+    //     this.roles = roles;
+    //     this.selectedRole = roles.length > 0 ? roles[0] : undefined;
+    //   },
+    //   error: (error: any) => {
+    //     debugger
+    //     console.error('Error getting roles: ', error);
+    //   }
+    // });
   }
 
   createAccount() {

@@ -38,7 +38,7 @@
 # Header
 --------------------------------------------------------------*/
 #header {
-  background: #fff;
+  background: #437cd1;
   transition: all 0.5s ease;
   padding: 5px 0;
 }
@@ -49,6 +49,10 @@
   font-weight: 600;
   letter-spacing: 1px;
   margin: 0;
+}
+
+#header .logo span{
+  color: white;
 }
 
 #header #logo h1 a {
@@ -98,7 +102,7 @@
   display: flex;
   list-style: none;
   align-items: center;
-  
+
 }
 
 .navbar li {
@@ -509,7 +513,7 @@ width: 15vw;
 	margin-right:6px;
 	font-size:20px;
 		display: none;
-	
+
 }
 .gallery-icon-cart .icon-cart{
 	position: absolute;
@@ -922,11 +926,11 @@ width: 15vw;
   text-align: center;
 }
 
-@media (max-width: 575.98px) { 
+@media (max-width: 575.98px) {
 	.login-form .col-sm-2{
 		text-align:left !important;
 		margin-left: 5px;
-        margin-right:5px;		
+        margin-right:5px;
 	}
 	.nav-icon .icon-setting{
 		font-size:25px;

@@ -19,9 +19,14 @@ export class OrderService {
     //Gui yeu cau dat hang
     return this.http.post(this.apiUrl, orderData);
   }
-  getOrderById(orderId: number): Observable<ApiResponse> {
+  getOrderById(orderId: number): Observable<any> {
     const url = `${environment.apiBaseUrl}/orders/${orderId}`;
-    return this.http.get<ApiResponse>(url);
+    return this.http.get(url);
+  }
+
+  getOrdersByUserId(userId: number): Observable<any> {
+    const url = `${environment.apiBaseUrl}/orders/user/${userId}`; // Đặt đường dẫn API để lấy danh sách đơn hàng của một người dùng cụ thể
+    return this.http.get(url);
   }
 
   getAllOrders(keyword:string, page: number, limit: number): Observable<OrderResponse[]> {
@@ -30,5 +35,14 @@ export class OrderService {
       .set('page', page.toString())
       .set('limit', limit.toString());
     return this.http.get<any>(this.apiGetAllOrders, { params });
+  }
+
+  updateOrder(orderId: number, orderData: OrderDTO): Observable<any> {
+    const url = `${environment.apiBaseUrl}/orders/${orderId}`;
+    return this.http.put(url, orderData);
+  }
+  deleteOrder(orderId: number): Observable<any> {
+    const url = `${environment.apiBaseUrl}/orders/${orderId}`;
+    return this.http.delete(url, {responseType: 'text'});
   }
 }

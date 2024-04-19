@@ -1,4 +1,4 @@
-
+@import "../../../styles/style.css";
 .page-number {
   cursor: pointer;
   padding: 5px 10px;
@@ -24,4 +24,11 @@
 }
 .button-primary {
   white-space: nowrap;
+}
+
+.table_styles {
+  margin-bottom: 30px !important;
+  border: none !important;
+  border-radius: 5px !important;
+  box-shadow: 1px 0 30px rgba(1, 41, 112, 0.1) !important;
 }

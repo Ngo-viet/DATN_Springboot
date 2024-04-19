@@ -20,9 +20,12 @@ import {AppRoutingModule} from "./app-routing.module";
 import {AppComponent} from "./app/app.component";
 import {NgbPopover} from "@ng-bootstrap/ng-bootstrap";
 import {UserProfileComponent} from "./components/user-profile/user.profile.component";
-import {OrderAdminComponent} from "./components/admin/order/order.admin.component";
-import {AdminComponent} from "./components/admin/admin.component";
-import {ProductAdminComponent} from "./components/admin/product/product.admin.component";
+import {AdminModule} from "./components/admin/admin.module";
+import {ProductListComponent} from "./components/product_list/product-list.component";
+
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+
+
 
 @NgModule({
   declarations: [
@@ -36,10 +39,7 @@ import {ProductAdminComponent} from "./components/admin/product/product.admin.co
     LoginComponent,
     RegisterComponent,
     UserProfileComponent,
-    //ADMIN
-    AdminComponent,
-    OrderAdminComponent,
-    ProductAdminComponent
+    ProductListComponent
 
   ],
   imports: [
@@ -49,8 +49,9 @@ import {ProductAdminComponent} from "./components/admin/product/product.admin.co
     HttpClientModule,
     RouterModule,
     AppRoutingModule,
-    NgbPopover
-
+    NgbPopover,
+    AdminModule,
+    BrowserAnimationsModule
 
   ],
   providers: [{

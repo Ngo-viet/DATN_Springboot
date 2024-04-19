@@ -1,137 +1,318 @@
 <app-header></app-header>
-<div class="container">
-  <div class="intro-section">
-    <h1>Đây là trang Order</h1>
-    <p>Sử dụng Bootstrap</p>
-  </div>
-  <form [formGroup]="orderForm"> <!-- Thêm form và gán formGroup -->
-    <div class="row">
-      <div class="col-md-6">
-        <h2 class="product-header">Thông tin người nhận</h2>
-        <div class="mb-3">
-          <label for="fullname" class="form-label">Họ và tên</label>
-          <input type="text"
-                 formControlName="fullname"
-                 class="form-control"
-                 id="fullname"
-                 [class.is-invalid]="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched">
-          <div
-            *ngIf="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched"
-            class="invalid-feedback">
-            Họ và tên là trường bắt buộc.
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <input type="text"
-                 formControlName="email"
-                 class="form-control"
-                 id="email"
-                 [class.is-invalid]="orderForm.get('email')!.invalid && orderForm.get('email')!.touched">
-          <div *ngIf="orderForm.get('email')!.invalid && orderForm.get('email')!.touched"
-               class="invalid-feedback">
-            {{ orderForm.get('email')!.hasError('email') ? 'Email không hợp lệ' : 'Email là trường bắt buộc' }}
-          </div>
-        </div>
+<div class="container"  >
 
-        <div class="mb-3">
-          <label for="phone" class="form-label">Số điện thoại</label>
-          <input type="text"
-                 class="form-control"
-                 formControlName="phone_number"
-                 placeholder="Số điện thoại"
-                 required
-                 id="phone"
-                 [class.is-invalid]="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched">
-          <div *ngIf="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched" class="invalid-feedback">
-            Số điện thoại là trường bắt buộc và ít nhất 6 ký tự.
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="address" class="form-label">Địa chỉ</label>
-          <input type="text"
-                 class="form-control"
-                 formControlName="address"
-                 placeholder="Địa chỉ"
-                 required
-                 id="address"
-                 [class.is-invalid]="orderForm.get('address')!.invalid && orderForm.get('address')!.touched">
-          <div *ngIf="orderForm.get('address')!.invalid && orderForm.get('address')!.touched" class="invalid-feedback">
-            Địa chỉ là trường bắt buộc và ít nhất 5 ký tự.
-          </div>
-        </div>
-        <div class="mb-3">
-          <label for="note" class="form-label">Ghi chú</label>
-          <input type="text"
-                 class="form-control"
-                 formControlName="note"
-                 placeholder="Ghi chú"
-                 required
-                 id="note">
-        </div>
-        <div class="mb-3">
-          <label for="shippingMethod">Phương thức vận chuyển</label>
-          <select class="form-control" id="shippingMethod"
-                  formControlName="shipping_method">
-            <option value="express">Nhanh (Express)</option>
-            <option value="normal">Thường (Normal)</option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="paymentMethod">Phương thức thanh toán</label>
-          <select class="form-control" id="paymentMethod"
-                  formControlName="payment_method">
-            <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-            <option value="other">Thanh toán khác</option>
-          </select>
-        </div>
-        <!-- </form> -->
-      </div>
-      <div class="col-md-6">
-        <h2 class="product-order">Sản phẩm đã đặt hàng</h2>
-        <table>
-          <thead>
-          <tr>
-            <th scope="col" class="text-start">Sản phẩm</th>
-            <th scope="col">Số lượng</th>
-            <th scope="col">Đơn giá</th>
-            <th scope="col">Tổng giá</th>
-          </tr>
-          </thead>
-          <tbody>
-          <ng-container *ngFor="let item of cartItems">
-            <tr>
-              <td>
-                <div class="product-info">
-                  <img [src]="item.product.thumbnail" alt="Product Image" class="product-image">
-                  <span class="product-name">{{ item.product.name }}</span>
+  <div class="row">
+    <div class="col-xl-8">
+
+      <div class="card">
+        <div class="card-body">
+          <ol class="activity-checkout mb-0 px-4 mt-3">
+            <li class="checkout-item">
+              <div class="avatar checkout-icon p-1">
+                <div class="avatar-title rounded-circle bg-primary">
+                  <i class="bx bxs-receipt text-white font-size-20"></i>
                 </div>
-              </td>
-              <td>{{ item.quantity }}</td>
-              <td>{{ item.product.price | number:'1.2-2' }}</td>
-              <td>{{ (item.product.price * item.quantity) | number:'1.2-2' }}</td>
+              </div>
+              <div class="feed-item-list">
+                <div>
+                  <h5 class="font-size-16 mb-1">Thông tin người nhận</h5>
+                  <p class="text-muted text-truncate mb-4">Điền đầy đủ thông tin</p>
+                  <div class="mb-3">
+                    <form [formGroup]="orderForm">
+                      <div>
+                        <div class="row">
+                          <div class="col-lg-4">
+                            <div class="mb-3">
+                              <label class="form-label" for="fullname">Họ và tên</label>
+                              <input type="text"  class="form-control" id="fullname"
+                                     formControlName="fullname" placeholder="Nhập tên"
+                              [class.is-invalid]="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched" >
+                              <div
+                                *ngIf="orderForm.get('fullname')!.invalid && orderForm.get('fullname')!.touched"
+                                class="invalid-feedback">
+                                Họ và tên là trường bắt buộc.
+                              </div>
 
-            </tr>
-          </ng-container>
-          </tbody>
-        </table>
-        <div class="text-start mt-3">
-          <h4 class="header-text text-end ">Tổng giá: {{ totalAmount | number:'1.2-2'}}</h4>
+                            </div>
+                          </div>
+                          <div class="col-lg-4">
+                            <div class="mb-3">
+                              <label class="form-label" for="email">Email</label>
+                              <input type="email" class="form-control" id="email" formControlName="email"
+                                     placeholder="Nhập email"
+                                     [class.is-invalid]="orderForm.get('email')!.invalid && orderForm.get('email')!.touched ">
+                              <div *ngIf="orderForm.get('email')!.invalid && orderForm.get('email')!.touched"
+                                   class="invalid-feedback">
+                                {{ orderForm.get('email')!.hasError('email') ? 'Email không hợp lệ' : 'Email là trường bắt buộc' }}
+                              </div>
+
+                            </div>
+                          </div>
+                          <div class="col-lg-4">
+                            <div class="mb-3">
+                              <label class="form-label" for="phone">Phone</label>
+                              <input type="text" class="form-control" id="phone" formControlName="phone_number"
+                                     placeholder="Nhập số điện thoại"
+                                     [class.is-invalid]="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched">
+                              <div *ngIf="orderForm.get('phone_number')!.invalid && orderForm.get('phone_number')!.touched" class="invalid-feedback">
+                                Số điện thoại là trường bắt buộc và ít nhất 6 ký tự.
+                              </div>
+
+                            </div>
+                          </div>
+                        </div>
+
+                        <div class="mb-3">
+                          <label class="form-label" for="address">Địa chỉ nhận hàng</label>
+                          <textarea class="form-control"
+                                    id="address"
+                                    rows="3"
+                                    formControlName="address"
+                                    placeholder="Nhập thông tin nhận hàng"
+                                    [class.is-invalid]="orderForm.get('address')!.invalid && orderForm.get('address')!.touched">
+                          </textarea>
+                          <div *ngIf="orderForm.get('address')!.invalid && orderForm.get('address')!.touched" class="invalid-feedback">
+                            Địa chỉ là trường bắt buộc và ít nhất 5 ký tự.
+                          </div>
+
+                        </div>
+
+                        <div class="mb-3">
+                          <label class="form-label" for="note">Ghi chú</label>
+                          <textarea class="form-control"
+                                    id="note"
+                                    rows="2"
+                                    formControlName="note"
+                                    placeholder="Nhập ghi chú mong muốn"></textarea>
+                        </div>
+
+
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </li>
+            <li class="checkout-item">
+              <div class="avatar checkout-icon p-1">
+                <div class="avatar-title rounded-circle bg-primary">
+                  <i class="bx bxs-truck text-white font-size-20"></i>
+                </div>
+              </div>
+              <div class="feed-item-list">
+                <div>
+                  <h5 class="font-size-16 mb-1" for="shippingMethod">Thông tin vận chuyển</h5>
+                  <p class="text-muted text-truncate mb-4"> Chọn thông tin</p>
+                  <div class="mb-3">
+<!--                    <div class="row" formControlName="shipping_method" id="shippingMethod">-->
+<!--                      <div class="col-lg-4 col-sm-6">-->
+<!--                        <div data-bs-toggle="collapse">-->
+<!--                          <label class="card-radio-label mb-0">-->
+<!--                            <input type="radio" name="address" id="info-address1" class="card-radio-input" checked="">-->
+<!--                            <div value="express" class="card-radio text-truncate p-3">-->
+<!--                              <span  class="fs-14 mb-4 d-block">Nhanh (Express)</span>-->
+<!--                              <span class="fs-14 mb-2 d-block">3 - 5 ngày</span>-->
+<!--                            </div>-->
+<!--                          </label>-->
+<!--                          <div class="edit-btn bg-light  rounded">-->
+<!--                            <a href="#"  data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Edit">-->
+<!--                              <i class="bx bx-pencil font-size-16"></i>-->
+<!--                            </a>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+
+<!--                      <div class="col-lg-4 col-sm-6">-->
+<!--                        <div>-->
+<!--                          <label class="card-radio-label mb-0">-->
+<!--                            <input type="radio" name="address" id="info-address2" class="card-radio-input">-->
+<!--                            <div value="normal" class="card-radio text-truncate p-3">-->
+<!--                              <span class="fs-14 mb-4 d-block">Thường (Normal)</span>-->
+<!--                              <span class="fs-14 mb-2 d-block">6 - 8 ngày</span>-->
+<!--                            </div>-->
+<!--                          </label>-->
+<!--                          <div class="edit-btn bg-light  rounded">-->
+<!--                            <a href="#" value="normal" data-bs-toggle="tooltip" data-placement="top" title="" data-bs-original-title="Edit">-->
+<!--                              <i class="bx bx-pencil font-size-16"></i>-->
+<!--                            </a>-->
+<!--                          </div>-->
+<!--                        </div>-->
+<!--                      </div>-->
+                    <select class="form-control" id="shippingMethod"
+                            formControlName="shipping_method">
+                      <option value="express">Nhanh (Express)</option>
+                      <option value="normal">Thường (Normal)</option>
+                    </select>
+                    </div>
+                  </div>
+                </div>
+
+            </li>
+            <li class="checkout-item">
+              <div class="avatar checkout-icon p-1">
+                <div class="avatar-title rounded-circle bg-primary">
+                  <i class="bx bxs-wallet-alt text-white font-size-20"></i>
+                </div>
+              </div>
+              <div class="feed-item-list">
+                <div>
+                  <h5 class="font-size-16 mb-1">Phương thức thanh toán</h5>
+                  <p class="text-muted text-truncate mb-4">Chọn phương thức thanh toán</p>
+                </div>
+                <div>
+                  <h5 for="paymentMethod" class="font-size-14 mb-3">Phương thức :</h5>
+<!--                  <div class="row">-->
+<!--                    <div class="col-lg-3 col-sm-6">-->
+<!--                      <div data-bs-toggle="collapse">-->
+<!--                        <label  class="card-radio-label">-->
+<!--                          <input type="radio" name="pay-method" id="paymentMethod" class="card-radio-input" value="atm">-->
+<!--                          <span class="card-radio py-3 text-center text-truncate">-->
+<!--                                                        <i class="bx bx-credit-card d-block h2 mb-3"></i>-->
+<!--                                                        Ngân hàng-->
+<!--                                                    </span>-->
+<!--                        </label>-->
+<!--                      </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="col-lg-3 col-sm-6">-->
+<!--                      <div>-->
+<!--                        <label class="card-radio-label">-->
+<!--                          <input type="radio" name="pay-method" id="pay-methodoption3" class="card-radio-input" checked="" value="cod">-->
+
+<!--                          <span class="card-radio py-3 text-center text-truncate">-->
+<!--                                                        <i class="bx bx-money d-block h2 mb-3"></i>-->
+<!--                                                        <span>Khi nhận hàng</span>-->
+<!--                                                    </span>-->
+<!--                        </label>-->
+<!--                      </div>-->
+<!--                    </div>-->
+
+<!--                  </div>-->
+                  <select class="form-control" id="paymentMethod"
+                          formControlName="payment_method">
+                    <option value="cod">Thanh toán khi nhận hàng (COD)</option>
+                    <option value="other">Thanh toán khác</option>
+                  </select>
+                </div>
+              </div>
+            </li>
+          </ol>
         </div>
-        <div class="mt-3">
-          <h4 class="product-header">Nhập coupon</h4>
-          <div class="input-group">
-            <input type="text" class="form-control" placeholder="Nhập coupon">
-            <button class="btn btn-gradient" type="button">Áp dụng</button>
+      </div>
+
+      <div class="row my-4">
+        <div class="col">
+          <a href="ecommerce-products.html" class="btn btn-link text-muted">
+            <i class="mdi mdi-arrow-left me-1"></i> Tiếp tục mua hàng </a>
+        </div> <!-- end col -->
+        <div class="col">
+          <div class="text-end mt-2 mt-sm-0">
+            <a (click)="placeOrder()" class="btn btn-success">
+              <i class="mdi mdi-cart-outline me-1"></i> Đặt hàng </a>
           </div>
-        </div>
-        <div class="text-start mt-3">
-          <button
-            (click)="placeOrder()"
-            class="btn btn-gradient" type="button">Đặt hàng</button>
+        </div> <!-- end col -->
+      </div> <!-- end row-->
+    </div>
+    <div class="col-xl-4">
+      <div class="card checkout-order-summary">
+        <div class="card-body">
+          <div class="p-3 bg-light mb-3">
+            <h5 class="font-size-16 mb-0">Sản phẩm đã đặt </h5>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-centered mb-0 table-nowrap">
+              <thead>
+              <tr>
+                <th class="border-top-0" style="width: 110px;" scope="col">Hình ảnh</th>
+                <th class="border-top-0" scope="col">Sản phẩm</th>
+                <th class="border-top-0" scope="col">Giá</th>
+              </tr>
+              </thead>
+              <tbody>
+              <ng-container *ngFor="let item of cartItems; let i = index">
+                <tr>
+                  <th scope="row"><img [src]="item.product.thumbnail"  alt="product-img" title="product-img" class="avatar-lg rounded"></th>
+                  <td>
+                    <h5 class="font-size-16 text-truncate"><a  class="text-dark">{{ item.product.name }}</a></h5>
+                    <p class="text-muted mb-0">
+                      <i class="bx bxs-star text-warning"></i>
+                      <i class="bx bxs-star text-warning"></i>
+                      <i class="bx bxs-star text-warning"></i>
+                      <i class="bx bxs-star text-warning"></i>
+                      <i class="bx bxs-star-half text-warning"></i>
+                    </p>
+                    <p class="text-muted mb-0 mt-1">{{item.product.price | number:'1.2-2'}} </p>
+                    <div class="product-quantity">
+                      <div class="border-wrapper">
+                        <button (click)="decreaseQuantity(i)">-</button>
+                        {{ item.quantity }}
+                        <button (click)="increaseQuantity(i)">+</button>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ (item.product.price * item.quantity) | number:'1.2-2' }}</td>
+                  <td>
+                    <button class="btn btn-danger" (click)="confirmDelete(i)">
+                      Xóa
+                    </button>
+                  </td>
+                </tr>
+
+              </ng-container>
+
+
+<!--              <tr>-->
+<!--                <td colspan="2">-->
+<!--                  <h5 class="font-size-14 m-0">Sub Total :</h5>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                  $ 780-->
+<!--                </td>-->
+<!--              </tr>-->
+<!--              <tr>-->
+<!--                <td colspan="2">-->
+<!--                  <h5 class="font-size-14 m-0">Discount :</h5>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                  - $ 78-->
+<!--                </td>-->
+<!--              </tr>-->
+
+<!--              <tr>-->
+<!--                <td colspan="2">-->
+<!--                  <h5 class="font-size-14 m-0">Shipping Charge :</h5>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                  $ 25-->
+<!--                </td>-->
+<!--              </tr>-->
+<!--              <tr>-->
+<!--                <td colspan="2">-->
+<!--                  <h5 class="font-size-14 m-0">Estimated Tax :</h5>-->
+<!--                </td>-->
+<!--                <td>-->
+<!--                  $ 18.20-->
+<!--                </td>-->
+<!--              </tr>-->
+
+              <tr class="bg-light">
+                <td colspan="2">
+                  <h5 class="font-size-14 m-0">Tổng:</h5>
+                </td>
+                <td>
+                  {{totalAmount | number:'1.2-2'}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+
+          </div>
         </div>
       </div>
     </div>
-  </form>
+  </div>
+  <!-- end row -->
+
 </div>
+
 <app-footer></app-footer>

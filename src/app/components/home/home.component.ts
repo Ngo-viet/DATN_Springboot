@@ -72,6 +72,8 @@ export class HomeComponent implements OnInit {
       }
     });
   }
+
+
   searchProducts(){
     this.currentPage = 1;
     this.itemsPerPage = 8;

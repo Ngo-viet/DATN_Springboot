@@ -1,72 +1,139 @@
 <app-header></app-header>
+
 <div class="container">
-  <div class="intro-section">
-    <h1>Chi tiết đơn hàng</h1>
-    <p>Xem thông tin chi tiết đơn hàng</p>
+  <div class="row">
+    <div class="col-xl-12">
+      <h2>Sản phẩm đã đặt</h2>
+
+      <div style="display: flex" *ngFor="let order of orders">
+        <div class="card border shadow-none col-xl-8">
+          <div class="card-body" *ngFor="let item of order.order_details">
+
+            <div class="d-flex align-items-start border-bottom pb-3">
+              <div class="me-4">
+                <img [src]="item.product.thumbnail" alt="Product Image" class="avatar-lg rounded">
+              </div>
+              <div class="flex-grow-1 align-self-center overflow-hidden">
+                <div>
+                  <h5 class="text-truncate font-size-18"><a href="#" class="text-dark">{{item.product.name}}</a></h5>
+                  <p class="text-muted mb-0">
+                    <i class="bx bxs-star text-warning"></i>
+                    <i class="bx bxs-star text-warning"></i>
+                    <i class="bx bxs-star text-warning"></i>
+                    <i class="bx bxs-star text-warning"></i>
+                    <i class="bx bxs-star-half text-warning"></i>
+                  </p>
+                </div>
+              </div>
+              <div class="flex-shrink-0 ms-2">
+                <ul class="list-inline mb-0 font-size-16">
+                  <li class="list-inline-item">
+                    <a href="#" class="text-muted px-1">
+                      <i class="mdi mdi-trash-can-outline"></i>
+                    </a>
+                  </li>
+                  <li class="list-inline-item">
+                    <a href="#" class="text-muted px-1">
+                      <i class="mdi mdi-heart-outline"></i>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="row"  >
+              <div class="col-md-4">
+                <div class="mt-3">
+                  <p class="text-muted mb-2">Giá</p>
+                  <h5 class="mb-0 mt-2"><span class="text-muted me-2"></span>{{item.product.price | number:'1.2-2'}}</h5>
+                </div>
+              </div>
+              <div class="col-md-5">
+                <div class="mt-3">
+                  <p class="text-muted mb-2">Số lượng</p>
+                  <div class="d-inline-flex">{{item.numberOfProducts }}</div>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="mt-3">
+                  <p class="text-muted mb-2">Tổng</p>
+                  <h5>{{ item.total_money | number:'1.2-2' }}</h5>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+        <div class="col-xl-4 ms-3">
+          <div class="mt-5 mt-lg-0" *ngIf="!recipientInfoDisplayed">
+            <div class="card border shadow-none">
+              <div class="card-header bg-transparent border-bottom py-3 px-4">
+                <h5 class="font-size-16 mb-0">Thông tin người nhận</h5>
+              </div>
+              <div class="card-body p-4 pt-2">
+                <table class="table mb-0">
+                  <tbody>
+                  <tr>
+                    <td>Họ và tên:</td>
+                    <td class="text-end">{{order.fullname}}</td>
+                  </tr>
+                  <tr>
+                    <td>Email: </td>
+                    <td class="text-end">{{order.email}}</td>
+                  </tr>
+                  <tr>
+                    <td>Số điện thoại: </td>
+                    <td class="text-end">{{order.phone_number}}</td>
+                  </tr>
+                  <tr>
+                    <td>Địa chỉ: </td>
+                    <td class="text-end">{{order.address}}</td>
+                  </tr>
+                  <tr>
+                    <td>Ghi chú: </td>
+                    <td class="text-end">{{order.note}}</td>
+                  </tr>
+                  <tr>
+                    <td>Phương thức vận chuyển</td>
+                    <td class="text-end">{{order.shipping_method}}</td>
+                  </tr>
+                  <tr>
+                    <td>Phương thức thanh toán</td>
+                    <td class="text-end">{{order.payment_method}}</td>
+                  </tr>
+                  <tr>
+                    <td>Tổng giá</td>
+                    <td class="text-end">{{ order.total_money | number:'1.2-2'}}</td>
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <ng-container *ngIf="recipientInfoDisplayed"></ng-container>
+        </div>
+      </div>
+
+
+      <div class="row my-4">
+        <div class="col-sm-6">
+          <a href="ecommerce-products.html" class="btn btn-link text-muted">
+            <i class="mdi mdi-arrow-left me-1"></i></a>
+        </div>
+        <div class="col-sm-6">
+          <div class="text-sm-end mt-2 mt-sm-0">
+            <a (click)="goToHomePage()" class="btn btn-success">
+              <i class="mdi mdi-cart-outline me-1"></i> Tiếp tục mua hàng </a>
+          </div>
+        </div>
+      </div>
+
+
+
   </div>
-
-  <!-- Thông tin người nhận -->
-
-    <div *ngIf="orderResponse" class="row">
-      <div class="col-md-6">
-        <h2 class="product-header">Thông tin người nhận</h2>
-        <div class="mb-3">
-          <p class="form-label">Họ và tên: {{ orderResponse.fullname }}</p>
-        </div>
-        <!-- Các trường thông tin khác -->
-        <div class="mb-3">
-          <p class="form-label">Email: {{ orderResponse.email }}</p>
-        </div>
-        <div class="mb-3">
-          <p class="form-label">Số điện thoại: {{ orderResponse.phone_number }}</p>
-        </div>
-        <div class="mb-3">
-          <p class="form-label">Địa chỉ: {{ orderResponse.address }}</p>
-        </div>
-        <div class="mb-3">
-          <p class="form-label">Ghi chú: {{ orderResponse.note }}</p>
-        </div>
-        <div class="mb-3">
-          <p class="form-label">Phương thức vận chuyển: {{ orderResponse.shipping_method }}</p>
-        </div>
-        <div class="mb-3">
-          <p class="form-label">Phương thức thanh toán: {{ orderResponse.payment_method }}</p>
-        </div>
-      </div>
-
-      <!-- Sản phẩm đã đặt hàng -->
-      <div class="col-md-6">
-        <h2 class="product-order">Sản phẩm đã đặt hàng</h2>
-        <table>
-          <thead>
-          <tr>
-            <th scope="col" class="text-start">Sản phẩm</th>
-            <th scope="col">Số lượng</th>
-            <th scope="col">Đơn giá</th>
-            <th scope="col">Tổng giá</th>
-          </tr>
-          </thead>
-          <tbody>
-
-              <tr *ngFor="let item of orderResponse.order_details">
-                <td>
-                  <div class="product-info">
-                    <img [src]="item.product.thumbnail" alt="Product Image" class="product-image">
-                    <span class="product-name">{{ item.product.name }}</span>
-                  </div>
-                </td>
-                <td>{{ item.number_of_products }}</td>
-                <td>{{ item.price | number:'1.2-2' }}</td>
-                <td>{{ item.total_money | number:'1.2-2' }}</td>
-              </tr>
-
-          </tbody>
-        </table>
-        <div class="text-start mt-3">
-          <h4 class="header-text text-end">Tổng giá: {{ orderResponse.total_money | number:'1.2-2' }}</h4>
-        </div>
-      </div>
-    </div>
-
 </div>
+</div>
+
 <app-footer></app-footer>

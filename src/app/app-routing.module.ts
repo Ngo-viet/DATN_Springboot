@@ -13,18 +13,20 @@ import {AuthGuardFn} from "./guards/auth.guard";
 import {AdminGuardFn} from "./guards/admin.guard";
 import {UserProfileComponent} from "./components/user-profile/user.profile.component";
 import {AdminComponent} from "./components/admin/admin.component";
+import {ProductListComponent} from "./components/product_list/product-list.component";
 
 //import { OrderAdminComponent } from './components/admin/order/order.admin.component';
 
  const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
-  { path: 'admin', component: AdminComponent, canActivate:[AdminGuardFn] },
+  // { path: 'admin', component: AdminComponent, canActivate:[AdminGuardFn] },
   { path: 'register', component: RegisterComponent },
   { path: 'products/:id', component: DetailProductComponent },
   { path: 'orders', component: OrderComponent, canActivate:[AuthGuardFn]},
   { path: 'user-profile', component: UserProfileComponent, canActivate:[AuthGuardFn]},
   { path: 'orders/:id', component: OrderDetailComponent },
+   {path: 'product-list', component: ProductListComponent},
   //Admin
   {
     path: 'admin',
@@ -34,7 +36,8 @@ import {AdminComponent} from "./components/admin/admin.component";
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes),
+  CommonModule],
   exports: [RouterModule]
 })
 

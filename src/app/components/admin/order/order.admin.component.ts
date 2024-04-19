@@ -2,7 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { NgModule } from '@angular/core';
-
+import {LocalStorageService} from "ngx-webstorage";
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import { OrderResponse } from '../../../responses/order/order.response';
@@ -20,12 +20,12 @@ import { ApiResponse } from '../../../responses/api.response';
 export class OrderAdminComponent implements OnInit{
   orders: OrderResponse[] = [];
   currentPage: number = 0;
-  itemsPerPage: number = 12;
+  itemsPerPage: number = 2;
   pages: number[] = [];
   totalPages:number = 0;
   keyword:string = "";
   visiblePages: number[] = [];
-  localStorage?:Storage;
+  localStorage?:LocalStorageService;
 
   constructor(
     private orderService: OrderService,
@@ -34,16 +34,16 @@ export class OrderAdminComponent implements OnInit{
     private location: Location,
     @Inject(DOCUMENT) private document: Document
   ) {
-    this.localStorage = document.defaultView?.localStorage;
+    // this.localStorage = document.defaultView?.localStorage;
   }
   ngOnInit(): void {
     debugger
-    this.currentPage = Number(this.localStorage?.getItem('currentOrderAdminPage')) || 0;
+    this.currentPage = Number(localStorage.getItem('currentOrderAdminPage')) || 0;
     this.getAllOrders(this.keyword, this.currentPage, this.itemsPerPage);
   }
   searchOrders() {
     this.currentPage = 0;
-    this.itemsPerPage = 12;
+    this.itemsPerPage = 5;
     //Mediocre Iron Wallet
     debugger
     this.getAllOrders(this.keyword.trim(), this.currentPage, this.itemsPerPage);
@@ -53,8 +53,8 @@ export class OrderAdminComponent implements OnInit{
     this.orderService.getAllOrders(keyword, page, limit).subscribe({
       next: (response: any) => {
         debugger
-        this.orders = response.data.orders;
-        this.totalPages = response.data.totalPages;
+        this.orders = response.orders;
+        this.totalPages = response.totalPages;
         this.visiblePages = this.generateVisiblePageArray(this.currentPage, this.totalPages);
       },
       complete: () => {
@@ -69,7 +69,7 @@ export class OrderAdminComponent implements OnInit{
   onPageChange(page: number) {
     debugger;
     this.currentPage = page < 0 ? 0 : page;
-    this.localStorage?.setItem('currentOrderAdminPage', String(this.currentPage));
+    localStorage.setItem('currentOrderAdminPage', String(this.currentPage));
     this.getAllOrders(this.keyword, this.currentPage, this.itemsPerPage);
   }
 
@@ -88,26 +88,26 @@ export class OrderAdminComponent implements OnInit{
       .map((_, index) => startPage + index);
   }
 
-  // deleteOrder(id:number) {
-  //   const confirmation = window
-  //     .confirm('Are you sure you want to delete this order?');
-  //   if (confirmation) {
-  //     debugger
-  //     this.orderService.deleteOrder(id).subscribe({
-  //       next: (response: ApiResponse) => {
-  //         debugger
-  //         location.reload();
-  //       },
-  //       complete: () => {
-  //         debugger;
-  //       },
-  //       error: (error: any) => {
-  //         debugger;
-  //         console.error('Error fetching products:', error);
-  //       }
-  //     });
-  //   }
-  // }
+  deleteOrder(id: number) {
+    const confirmation = window
+      .confirm('Bạn chắc chắn muôn xóa đơn hàng này ?');
+    if (confirmation) {
+      debugger
+      this.orderService.deleteOrder(id).subscribe({
+        next: (response: any) => {
+          debugger
+          location.reload();
+        },
+        complete: () => {
+          debugger;
+        },
+        error: (error: any) => {
+          debugger;
+          console.error('Error fetching products:', error);
+        }
+      });
+    }
+  }
   viewDetails(order:OrderResponse) {
     debugger
     this.router.navigate(['/admin/orders', order.id]);
