@@ -10,15 +10,24 @@ import com.project.shopapp.models.ProductImage;
 import com.project.shopapp.repositories.CategoryRepository;
 import com.project.shopapp.repositories.ProductImageRepository;
 import com.project.shopapp.repositories.ProductRepository;
+import com.project.shopapp.responses.CategoryAmountResponse;
+import com.project.shopapp.responses.CrategoryProductResponse;
 import com.project.shopapp.responses.ProductResponse;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +35,7 @@ public class ProductService implements IProductService{
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductImageRepository productImageRepository;
+    private static String UPLOADS_FOLDER = "uploads";
     @Override
     @Transactional
     public Product createProduct(ProductDTO productDTO) throws DataNotFoundException {
@@ -129,4 +139,90 @@ public class ProductService implements IProductService{
         return productImageRepository.save(newProductImage);
     }
 
+    @Override
+    public void deleteFile(String filename) throws IOException {
+        // Đường dẫn đến thư mục chứa file
+        java.nio.file.Path uploadDir = Paths.get(UPLOADS_FOLDER);
+        // Đường dẫn đầy đủ đến file cần xóa
+        java.nio.file.Path filePath = uploadDir.resolve(filename);
+
+        // Kiểm tra xem file tồn tại hay không
+        if (Files.exists(filePath)) {
+            // Xóa file
+            Files.delete(filePath);
+        } else {
+            throw new FileNotFoundException("File not found: " + filename);
+        }
+    }
+    private boolean isImageFile(MultipartFile file) {
+        String contentType = file.getContentType();
+        return contentType != null && contentType.startsWith("image/");
+    }
+    @Override
+    public String storeFile(MultipartFile file) throws IOException {
+        if (!isImageFile(file) || file.getOriginalFilename() == null) {
+            throw new IOException("Invalid image format");
+        }
+        String filename = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
+        // Thêm UUID vào trước tên file để đảm bảo tên file là duy nhất
+        String uniqueFilename = UUID.randomUUID().toString() + "_" + filename;
+        // Đường dẫn đến thư mục mà bạn muốn lưu file
+        java.nio.file.Path uploadDir = Paths.get(UPLOADS_FOLDER);
+        // Kiểm tra và tạo thư mục nếu nó không tồn tại
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        // Đường dẫn đầy đủ đến file
+        java.nio.file.Path destination = Paths.get(uploadDir.toString(), uniqueFilename);
+        // Sao chép file vào thư mục đích
+        Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
+        return uniqueFilename;
+    }
+
+    public int getTotalProductsByCategoryId(Long categoryId) {
+        List<Product> products = productRepository.findByCategoryId(categoryId);
+        int totalProducts = 0;
+        for (Product product : products) {
+            totalProducts += product.getProductImages().size();
+        }
+        return totalProducts;
+    }
+
+//    private final ProductService productService;
+//
+//    public List<CrategoryProductResponse> getTotalProductsByCategory() {
+//        List<Category> categories = categoryRepository.findAll();
+//        List<CrategoryProductResponse> categoryProductList = new ArrayList<>();
+//
+//        for (Category category : categories) {
+//            int totalProducts = productService.getTotalProductsByCategoryId(category.getId());
+//            CrategoryProductResponse categoryProductDto = new CrategoryProductResponse(category.getId(), category.getName(), totalProducts);
+//            categoryProductList.add(categoryProductDto);
+//        }
+//
+//        return categoryProductList;
+//    }
+
+    @Transactional(readOnly = true)
+    public Long getTotalProducts() {
+        return productRepository.count();
+    }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public List<CategoryAmountResponse> getProductAmountByCategory() {
+        List<Object[]> resultList = entityManager.createQuery(
+                        "SELECT p.category.name AS category, COUNT(p) AS amount " +
+                                "FROM Product p " +
+                                "GROUP BY p.category.name", Object[].class)
+                .getResultList();
+
+        // Convert Object[] to CategoryAmount objects
+        List<CategoryAmountResponse> categoryAmounts = resultList.stream()
+                .map(result -> new CategoryAmountResponse((String) result[0], (long) result[1]))
+                .collect(Collectors.toList());
+
+        return categoryAmounts;
+    }
 }

@@ -3,15 +3,17 @@ package com.project.shopapp.controllers;
 import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.dtos.*;
 import com.project.shopapp.models.Order;
+import com.project.shopapp.responses.Order.ChartTotalResponse;
 import com.project.shopapp.responses.OrderListResponse;
 import com.project.shopapp.responses.OrderResponse;
-import com.project.shopapp.services.IOrderService;
+import com.project.shopapp.services.OrderService;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
@@ -23,8 +25,9 @@ import java.util.List;
 @RequestMapping("${api.prefix}/orders")
 @RequiredArgsConstructor
 public class OrderController {
-    private final IOrderService orderService;
+    private final OrderService orderService;
     private final LocalizationUtils localizationUtils;
+
     @PostMapping("")
     public ResponseEntity<?> createOrder(
             @Valid @RequestBody OrderDTO orderDTO,
@@ -56,6 +59,7 @@ public class OrderController {
     }
     //GET http://localhost:8088/api/v1/orders/2
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<?> getOrder(@Valid @PathVariable("id") Long orderId) {
         try {
             Order existingOrder = orderService.getOrder(orderId);
@@ -83,7 +87,7 @@ public class OrderController {
     public ResponseEntity<String> deleteOrder(@Valid @PathVariable Long id) {
         //xóa mềm => cập nhật trường active = false
         orderService.deleteOrder(id);
-        return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY));
+        return ResponseEntity.ok(localizationUtils.getLocalizedMessage(MessageKeys.DELETE_ORDER_SUCCESSFULLY, id));
     }
 
     @GetMapping("/get-orders-by-keyword")
@@ -95,7 +99,7 @@ public class OrderController {
     ) {
         // Tạo Pageable từ thông tin trang và giới hạn
         PageRequest pageRequest = PageRequest.of(
-                page, limit,
+                page - 1, limit,
                 //Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
@@ -110,5 +114,27 @@ public class OrderController {
                 .orders(orderResponses)
                 .totalPages(totalPages)
                 .build());
+    }
+
+    @GetMapping("/total-orders-by-month")
+    public ResponseEntity<Long> getTotalOrdersByMonth(@RequestParam int month, @RequestParam int year) {
+        Long totalOrders = orderService.getTotalOrdersByMonth(month, year);
+        return new ResponseEntity<>(totalOrders, HttpStatus.OK);
+    }
+
+    @GetMapping("/revenue-by-month")
+    public List<Object[]> getRevenueByMonth(@RequestParam int month, @RequestParam int year) {
+        return orderService.getRevenueByMonth(month, year);
+    }
+
+    @GetMapping("/test")
+    public List<Object[]> getRevenueByMonth( @RequestParam int year) {
+        return orderService.getTotalTest(year);
+    }
+
+
+    @GetMapping("/totalMoneyByMonth")
+    public List<ChartTotalResponse> getTotalMoneyByMonth(@RequestParam int year) {
+        return orderService.getTotalMoneyByMonth(year);
     }
 }

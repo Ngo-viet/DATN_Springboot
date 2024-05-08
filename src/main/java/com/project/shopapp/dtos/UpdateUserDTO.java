@@ -33,4 +33,7 @@ public class UpdateUserDTO {
     @JsonProperty("facebook_account_id")
     private int facebookAccountId;
 
+    @JsonProperty("email")
+    private String email;
+
 }

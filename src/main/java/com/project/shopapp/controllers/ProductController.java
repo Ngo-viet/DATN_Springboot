@@ -5,9 +5,12 @@ import com.project.shopapp.components.LocalizationUtils;
 import com.project.shopapp.dtos.*;
 import com.project.shopapp.models.Product;
 import com.project.shopapp.models.ProductImage;
+import com.project.shopapp.responses.CategoryAmountResponse;
+import com.project.shopapp.responses.CrategoryProductResponse;
 import com.project.shopapp.responses.ProductListResponse;
 import com.project.shopapp.responses.ProductResponse;
 import com.project.shopapp.services.IProductService;
+import com.project.shopapp.services.ProductService;
 import com.project.shopapp.utils.MessageKeys;
 import jakarta.annotation.Resource;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +41,7 @@ import java.util.stream.Collectors;
 @RequestMapping("${api.prefix}/products")
 @RequiredArgsConstructor
 public class ProductController {
-    private final IProductService productService;
+    private final ProductService productService;
     private final LocalizationUtils localizationUtils;
 
     @PostMapping("")
@@ -159,7 +162,7 @@ public class ProductController {
     ) {
         // Tạo Pageable từ thông tin trang và giới hạn
         PageRequest pageRequest = PageRequest.of(
-                page, limit,
+                page , limit,
                 //Sort.by("createdAt").descending()
                 Sort.by("id").ascending()
         );
@@ -184,7 +187,6 @@ public class ProductController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
-
     }
     @GetMapping("/by-ids")
     public ResponseEntity<?> getProductsByIds(@RequestParam("ids") String ids) {
@@ -210,29 +212,7 @@ public class ProductController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-    //@PostMapping("/generateFakeProducts")
-    private ResponseEntity<String> generateFakeProducts() {
-        Faker faker = new Faker();
-        for (int i = 0; i < 1_000_000; i++) {
-            String productName = faker.commerce().productName();
-            if(productService.existsByName(productName)) {
-                continue;
-            }
-            ProductDTO productDTO = ProductDTO.builder()
-                    .name(productName)
-                    .price((float)faker.number().numberBetween(10, 90_000_000))
-                    .description(faker.lorem().sentence())
-                    .thumbnail("")
-                    .categoryId((long)faker.number().numberBetween(2, 5))
-                    .build();
-            try {
-                productService.createProduct(productDTO);
-            } catch (Exception e) {
-                return ResponseEntity.badRequest().body(e.getMessage());
-            }
-        }
-        return ResponseEntity.ok("Fake Products created successfully");
-    }
+
     //update a product
     @PutMapping("/{id}")
     public ResponseEntity<?> updateProduct(
@@ -245,4 +225,27 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    @GetMapping("/category/total-products")
+    public ResponseEntity<?> getTotalProductsByCategoryId(@RequestParam Long categoryId) {
+        try {
+            int totalProducts = productService.getTotalProductsByCategoryId(categoryId);
+            return ResponseEntity.ok(totalProducts);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalProducts() {
+        Long totalProducts = productService.getTotalProducts();
+        return new ResponseEntity<>(totalProducts, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/productAmountByCategory")
+    public List<CategoryAmountResponse> getProductAmountByCategory() {
+        return productService.getProductAmountByCategory();
+    }
+
 }

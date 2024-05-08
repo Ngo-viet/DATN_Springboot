@@ -26,7 +26,7 @@ public class CouponController {
                 .result(finalAmount)
                 .build();
         return ResponseEntity.ok(new ResponseObject(
-                "Calculate coupn successfully",
+                "Calculate coupon successfully",
                 HttpStatus.OK,
                 couponCalculationResponse
         ));

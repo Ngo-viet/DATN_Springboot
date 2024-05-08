@@ -7,13 +7,19 @@ import com.project.shopapp.dtos.UserDTO;
 import com.project.shopapp.exceptions.DataNotFoundException;
 
 import com.project.shopapp.exceptions.ExpiredTokenException;
+import com.project.shopapp.exceptions.InvalidPasswordException;
 import com.project.shopapp.exceptions.PermissionDenyException;
 import com.project.shopapp.models.*;
 import com.project.shopapp.repositories.RoleRepository;
+import com.project.shopapp.repositories.TokenReponsitory;
 import com.project.shopapp.repositories.UserRepository;
 import com.project.shopapp.utils.MessageKeys;
 import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.text.html.Option;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -36,9 +43,11 @@ public class UserService implements IUserService{
     private final JwtTokenUtils jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
     private final LocalizationUtils localizationUtils;
+    private final TokenReponsitory tokenRepository;
     @Override
     @Transactional
     public User createUser(UserDTO userDTO) throws Exception {
+
         //register user
         String phoneNumber = userDTO.getPhoneNumber();
         // Kiểm tra xem số điện thoại đã tồn tại hay chưa
@@ -58,14 +67,13 @@ public class UserService implements IUserService{
                 .password(userDTO.getPassword())
                 .address(userDTO.getAddress())
                 .dateOfBirth(userDTO.getDateOfBirth())
-                .facebookAccountId(userDTO.getFacebookAccountId())
-                .googleAccountId(userDTO.getGoogleAccountId())
+                .email(userDTO.getEmail())
                 .active(true)
                 .build();
 
         newUser.setRole(role);
         // Kiểm tra nếu có accountId, không yêu cầu password
-        if (userDTO.getFacebookAccountId() == 0 && userDTO.getGoogleAccountId() == 0) {
+        if (userDTO.getFacebookAccountId() == 0 ) {
             String password = userDTO.getPassword();
             String encodedPassword = passwordEncoder.encode(password);
             newUser.setPassword(encodedPassword);
@@ -113,6 +121,7 @@ public class UserService implements IUserService{
     public String login(
             String phoneNumber,
             String password
+//            , Long roleId
 
     ) throws Exception {
         Optional<User> optionalUser = userRepository.findByPhoneNumber(phoneNumber);
@@ -122,12 +131,11 @@ public class UserService implements IUserService{
         //return optionalUser.get();//muốn trả JWT token ?
         User existingUser = optionalUser.get();
         //check password
-        if (existingUser.getFacebookAccountId() == 0
-                && existingUser.getGoogleAccountId() == 0) {
+
             if(!passwordEncoder.matches(password, existingUser.getPassword())) {
                 throw new BadCredentialsException(localizationUtils.getLocalizedMessage(MessageKeys.WRONG_PHONE_PASSWORD));
             }
-        }
+
 //        Optional<Role> optionalRole = roleRepository.findById(roleId);
 //        if(optionalRole.isEmpty() || !roleId.equals(existingUser.getRole().getId())) {
 //            throw new DataNotFoundException(localizationUtils.getLocalizedMessage(MessageKeys.ROLE_DOES_NOT_EXISTS));
@@ -162,22 +170,34 @@ public class UserService implements IUserService{
     @Override
     @Transactional
     public User updatedUser (Long userId, UpdateUserDTO updatedUserDTO) throws Exception {
+        // Find the existing user by userId
         User existingUser = userRepository.findById(userId)
                 .orElseThrow(() -> new DataNotFoundException("User not found"));
-        //Check if the phone number
+
+        // Check if the phone number is being changed and if it already exists for another user
         String newPhoneNumber = updatedUserDTO.getPhoneNumber();
-        if (updatedUserDTO.getFullName() != null){
+        if (!existingUser.getPhoneNumber().equals(newPhoneNumber) &&
+                userRepository.existsByPhoneNumber(newPhoneNumber)) {
+            throw new DataIntegrityViolationException("Phone number already exists");
+        }
+
+        // Update user information based on the DTO
+        if (updatedUserDTO.getFullName() != null) {
             existingUser.setFullName(updatedUserDTO.getFullName());
         }
-        if(newPhoneNumber != null){
+        if (newPhoneNumber != null) {
             existingUser.setPhoneNumber(newPhoneNumber);
         }
-        if (updatedUserDTO.getAddress() != null){
+        if (updatedUserDTO.getAddress() != null) {
             existingUser.setAddress(updatedUserDTO.getAddress());
         }
-        if(updatedUserDTO.getFacebookAccountId() > 0){
-            existingUser.setFacebookAccountId(updatedUserDTO.getFacebookAccountId());
+        if (updatedUserDTO.getDateOfBirth() != null) {
+            existingUser.setDateOfBirth(updatedUserDTO.getDateOfBirth());
         }
+        if (updatedUserDTO.getEmail() != null) {
+            existingUser.setEmail(updatedUserDTO.getEmail());
+        }
+
         //Update the password
         if(updatedUserDTO.getPassword() != null && !updatedUserDTO.getPassword().isEmpty()){
             if (!updatedUserDTO.getPassword().equals(updatedUserDTO.getRetypePassword())){
@@ -191,10 +211,48 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public Page<User> fillAll(String keyword, Pageable pageable){
+    public Page<User> findAll(String keyword, Pageable pageable) {
         return userRepository.findAll(keyword, pageable);
     }
 
+    @Override
+    public User getUserById(Long userId) throws Exception {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        if(optionalUser.isPresent()) {
+            return optionalUser.get();
+        }
+        throw new DataNotFoundException("Cannot find product with id =" + userId);
+    }
+
+    @Override
+    @Transactional
+    public void resetPassword(Long userId, String newPassword)
+            throws InvalidPasswordException, DataNotFoundException {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        existingUser.setPassword(encodedPassword);
+        userRepository.save(existingUser);
+        //reset password => clear token
+        List<Token> tokens = tokenRepository.findByUser(existingUser);
+        for (Token token : tokens) {
+            tokenRepository.delete(token);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void blockOrEnable(Long userId, Boolean active) throws DataNotFoundException {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new DataNotFoundException("User not found"));
+        existingUser.setActive(active);
+        userRepository.save(existingUser);
+    }
+
+
+    public long getTotalUsersWithUserRole() {
+        return userRepository.countUsersWithUserRole();
+    }
 }
 
 

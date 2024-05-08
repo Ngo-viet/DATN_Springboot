@@ -3,11 +3,13 @@ package com.project.shopapp.services;
 import com.project.shopapp.dtos.CategoryDTO;
 import com.project.shopapp.models.Category;
 import com.project.shopapp.repositories.CategoryRepository;
+import com.project.shopapp.responses.CrategoryProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -50,5 +52,24 @@ public class CategoryService implements ICategoryService {
     public void deleteCategory(long id) {
         //xóa xong
         categoryRepository.deleteById(id);
+    }
+
+    private final ProductService productService;
+
+    public List<CrategoryProductResponse> getTotalProductsByCategory() {
+        List<Category> categories = categoryRepository.findAll();
+        List<CrategoryProductResponse> categoryProductList = new ArrayList<>();
+
+        for (Category category : categories) {
+            int totalProducts = productService.getTotalProductsByCategoryId(category.getId());
+            CrategoryProductResponse categoryProductDto = new CrategoryProductResponse(category.getId(), category.getName(), totalProducts);
+            categoryProductList.add(categoryProductDto);
+        }
+
+        return categoryProductList;
+    }
+
+    public long getTotalCategories() {
+        return categoryRepository.count();
     }
 }
