@@ -1,0 +1,7 @@
+<form [formGroup]="updateCommentForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="content">Đánh giá:</label>
+    <textarea style="width: 500px;" id="content" formControlName="content" class="form-control" rows="3"></textarea>
+  </div>
+  <button type="submit" class="btn btn-primary">Cập nhật đánh giá </button>
+</form>

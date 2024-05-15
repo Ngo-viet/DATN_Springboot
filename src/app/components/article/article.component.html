@@ -1,0 +1,107 @@
+<app-header></app-header>
+    <!-- ======= Breadcrumbs ======= -->
+    <div id="breadcrumbs" class="breadcrumbs">
+      <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center">
+          <h2>Bài viết</h2>
+          <ol>
+            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="blog.html">Bài viết</a></li>
+            <li>Chi tiết bài viết</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="blog">
+        <div class="row">
+
+          <div class="col-lg-8 entries" *ngIf="article">
+
+            <article class="entry entry-single">
+
+              
+
+              <h2 class="entry-title">
+                <a href="">{{article.title}}</a>
+              </h2>
+
+              <div class="entry-meta">
+                <ul>
+                  <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="">{{article.author}}</a></li>
+                  <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href=""><time datetime="2020-01-01">{{article.created_at}}</time></a></li>
+                </ul>
+              </div>
+
+              <div class="entry-content">
+                <p>
+                  {{article.description}}
+                </p>
+                <div style="margin-top: 30px;" class="entry-img">
+                  <img [src]="article.url" alt="" class="img-fluid">
+                </div>
+
+                <blockquote>
+                  <p>
+                    Nước hoa để lại ấn tượng rất khác biệt, vì vậy khi bạn tặng ai đó một món quà là nước hoa, tôi liền nghĩ rằng món quà đó bạn dành cho một người mà bạn yêu thương (Ryan Reynolds).
+                  </p>
+                </blockquote>
+
+              </div>       
+
+            </article><!-- End blog entry -->
+
+            <div class="blog-author d-flex align-items-center">
+              <!-- <img src="assets/img/blog/blog-author.jpg" class="rounded-circle float-left" alt=""> -->
+              <div>
+                <h4>{{article.author}}</h4>
+                <div class="social-links">
+                  <a href="https://twitters.com/#"><i class="bi bi-twitter"></i></a>
+                  <a href="https://facebook.com/#"><i class="bi bi-facebook"></i></a>
+                  <a href="https://instagram.com/#"><i class="biu bi-instagram"></i></a>
+                </div>
+                <p>
+                  Nước hoa như một phần của nền văn hóa, giống như rượu và thức ăn. Hương thơm là một phần của cuộc sống.
+                </p>
+              </div>
+            </div><!-- End blog author bio -->
+
+          </div><!-- End blog entries list -->
+
+          <div class="col-lg-4">
+
+            <div class="sidebar">
+
+              <h3 class="sidebar-title">Thương hiệu</h3>
+              <div class="sidebar-item categories">
+                <ul *ngFor="let category of categories">
+                  <li><a href="#">{{category.name}}</a></li>
+                </ul>
+              </div><!-- End sidebar categories-->
+
+              <h3 class="sidebar-title">Bài viết mới nhất</h3>
+              <div class="sidebar-item recent-posts" *ngFor="let article of articles">
+                <div class="post-item clearfix">
+                  <img [src]="article.url" alt="">
+                  <h4><a href="">{{article.title}}</a></h4>
+                  <time datetime="2020-01-01">{{article.created_at}}</time>
+                </div>
+
+              </div><!-- End sidebar recent posts-->
+
+              
+
+            </div><!-- End sidebar -->
+
+          </div><!-- End blog sidebar -->
+
+        </div>
+      </div>
+      
+    </div>
+    
+
+    <app-contact></app-contact>
+<app-footer></app-footer>

@@ -1,0 +1,15 @@
+<div>
+    <h2>Add New Coupon</h2>
+    <form (ngSubmit)="addCoupon()">
+      <div>
+        <label for="code">Code:</label>
+        <input type="text" id="code" [(ngModel)]="newCoupon.code" name="code" required>
+      </div>
+      <div>
+        <label for="active">Active:</label>
+        <input type="checkbox" id="active" [(ngModel)]="newCoupon.active" name="active">
+      </div>
+      <button type="submit">Add Coupon</button>
+    </form>
+  </div>
+  

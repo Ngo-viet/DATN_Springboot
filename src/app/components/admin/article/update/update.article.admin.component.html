@@ -1,0 +1,45 @@
+<div>
+    <!-- Form cập nhật thông tin sản phẩm -->
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h3>Update Product</h3>
+                <form (ngSubmit)="updateArticleData()">
+                    <div class="form-group">
+                        <label for="title">Tiêu đề:</label>
+                        <input type="text" id="title" [(ngModel)]="updateArticle.title" name="title"
+                            class="form-control" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="arthor">Tác giả:</label>
+                        <input type="text" id="arthor" [(ngModel)]="updateArticle.author" name="arthor"
+                            class="form-control col-md-3" required>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="description">Nội dung:</label>
+                        <textarea id="description" [(ngModel)]="updateArticle.description" name="description"
+                            class="form-control" required></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="created_at">Ngày tạo:</label>
+                        <input type="date" id="created_at" [(ngModel)]="updateArticle.created_at" name="created_at"
+                            class="form-control col-md-3" required>
+                    </div>
+
+
+                    
+                    <div class="form-group mb-3">
+                        <label for="thumbnail">Cập nhật ảnh:</label>
+                        <button type="button" class="btn btn-primary mt-2" (click)="navigateToUpdateImage()">Upload
+                            Thumbnail</button>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
