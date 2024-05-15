@@ -5,7 +5,7 @@ import lombok.*;
 
 @Entity
 @Table(name = "categories")
-@Data//toString
+@Data
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,4 +18,6 @@ public class Category {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    private String thumbnail;
 }

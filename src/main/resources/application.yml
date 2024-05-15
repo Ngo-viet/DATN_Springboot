@@ -7,11 +7,11 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     #password:
-    password: Ngoviet@0868
+    password: 123456
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
       dialect: org.hibernate.dialect.MySQL8Dialect
@@ -31,3 +31,12 @@ jwt:
   secretKey: GXnigQfkBnsEwRFDfpAGcY+cfO3YRhH54a3pH2cCo/Q=
   expiration-refresh-token: 5184000
 
+payment:
+  vnPay:
+    url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+    tmnCode: 039PA8X8
+    secretKey: 0KZ68VZ2MW7IRLENO2EUBMRRYTYKEFGA
+    returnUrl: http://localhost:4200/
+    version: 2.1.0
+    command: pay
+    orderType: other

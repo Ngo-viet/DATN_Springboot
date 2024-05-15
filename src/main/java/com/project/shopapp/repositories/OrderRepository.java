@@ -18,4 +18,19 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "OR o.note LIKE %:keyword% " +
             "OR o.email LIKE %:keyword%)")
     Page<Order> findByKeyword(@Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT COUNT(o) " +
+            "FROM Order o " +
+            "WHERE MONTH(o.orderDate) = :month " +
+            "AND YEAR(o.orderDate) = :year " +
+            "AND o.status = 'completed'")
+    Long getTotalOrdersByMonth(@Param("month") int month, @Param("year") int year);
+
+    @Query("SELECT SUM(o.totalMoney) " +
+            "FROM Order o " +
+            "WHERE MONTH(o.orderDate) = :month " +
+            "AND YEAR(o.orderDate) = :year " +
+            "AND o.status = 'completed'")
+    Double getTotalMoney(@Param("month") int month, @Param("year") int year);
+
 }

@@ -6,6 +6,7 @@ import com.project.shopapp.responses.UserResponse;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -21,12 +22,17 @@ public class CommentResponse {
     private UserResponse userResponse;
 
     @JsonProperty("updated_at")
-    private LocalDateTime updatedAt;
+    private String updatedAt;
+
+
+
     public static CommentResponse fromComment(Comment comment) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String formattedDateTime = comment.getUpdatedAt().format(formatter);
         return CommentResponse.builder()
                 .content(comment.getContent())
                 .userResponse(UserResponse.fromUser(comment.getUser()))
-                .updatedAt(comment.getUpdatedAt())
+                .updatedAt(formattedDateTime)
                 .build();
     }
 }

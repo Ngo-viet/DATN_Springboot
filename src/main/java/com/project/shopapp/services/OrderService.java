@@ -8,6 +8,9 @@ import com.project.shopapp.repositories.OrderDetailRepository;
 import com.project.shopapp.repositories.OrderRepository;
 import com.project.shopapp.repositories.ProductRepository;
 import com.project.shopapp.repositories.UserRepository;
+import com.project.shopapp.responses.Order.ChartTotalResponse;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.aspectj.weaver.ast.Or;
 import org.modelmapper.ModelMapper;
@@ -17,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,61 +35,74 @@ public class OrderService implements IOrderService{
     @Override
     @Transactional
     public Order createOrder(OrderDTO orderDTO) throws Exception {
-        //tìm xem user'id có tồn tại ko
+        // Kiểm tra xem cartItems có null không
+        if (orderDTO.getCartItems() == null) {
+            throw new Exception("Cart items cannot be null.");
+        }
+
+        // Tìm xem user'id có tồn tại không
         User user = userRepository
                 .findById(orderDTO.getUserId())
-                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: "+orderDTO.getUserId()));
-        //convert orderDTO => Order
-        //dùng thư viện Model Mapper
-        // Tạo một luồng bảng ánh xạ riêng để kiểm soát việc ánh xạ
+                .orElseThrow(() -> new DataNotFoundException("Cannot find user with id: " + orderDTO.getUserId()));
+
+        // Convert orderDTO => Order
         modelMapper.typeMap(OrderDTO.class, Order.class)
                 .addMappings(mapper -> mapper.skip(Order::setId));
+
         // Cập nhật các trường của đơn hàng từ orderDTO
         Order order = new Order();
         modelMapper.map(orderDTO, order);
         order.setUser(user);
-        order.setOrderDate(new Date());//lấy thời điểm hiện tại
-        order.setStatus(OrderStatus.PENDING);
-        //Kiểm tra shipping date phải >= ngày hôm nay
+        order.setOrderDate(new Date());// Lấy thời điểm hiện tại
+        order.setStatus(OrderStatus.NOT_COMPLETED);
+
+        // Kiểm tra shipping date phải >= ngày hôm nay
         LocalDate shippingDate = orderDTO.getShippingDate() == null
                 ? LocalDate.now() : orderDTO.getShippingDate();
+        if ("express".equals(orderDTO.getShippingMethod())) {
+            shippingDate = shippingDate.plusDays(3);
+        } else if ("normal".equals(orderDTO.getShippingMethod())) {
+            shippingDate = shippingDate.plusDays(6);
+        }
+
         if (shippingDate.isBefore(LocalDate.now())) {
             throw new DataNotFoundException("Date must be at least today !");
         }
         order.setShippingDate(shippingDate);
-        order.setActive(true);//đoạn này nên set sẵn trong sql
+        order.setActive(true); // Đoạn này nên set sẵn trong SQL
         order.setTotalMoney(orderDTO.getTotalMoney());
         orderRepository.save(order);
+
         // Tạo danh sách các đối tượng OrderDetail từ cartItems
-        List<OrderDetail> orderDetails = new ArrayList<>();
-        for (CartItemDTO cartItemDTO : orderDTO.getCartItems()) {
-            // Tạo một đối tượng OrderDetail từ CartItemDTO
-            OrderDetail orderDetail = new OrderDetail();
-            orderDetail.setOrder(order);
+        List<OrderDetail> orderDetails = orderDTO.getCartItems().stream().map(cartItemDTO -> {
+            try {
+                // Tìm sản phẩm từ cartItemDTO
+                Product product = productRepository.findById(cartItemDTO.getProductId())
+                        .orElseThrow(() -> new Exception("Product not found with id: " + cartItemDTO.getProductId()));
 
-            // Lấy thông tin sản phẩm từ cartItemDTO
-            Long productId = cartItemDTO.getProductId();
-            int quantity = cartItemDTO.getQuantity();
+                // Tạo OrderDetail từ CartItemDTO
+                OrderDetail orderDetail = new OrderDetail();
+                orderDetail.setOrder(order);
+                orderDetail.setProduct(product);
+                orderDetail.setNumberOfProducts(cartItemDTO.getQuantity());
+                orderDetail.setPrice(product.getPrice());
 
-            // Tìm thông tin sản phẩm từ cơ sở dữ liệu (hoặc sử dụng cache nếu cần)
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new DataNotFoundException("Product not found with id: " + productId));
+                // Tính toán total_money cho mỗi OrderDetail
+                Float totalMoney = product.getPrice() * cartItemDTO.getQuantity();
+                orderDetail.setTotalMoney(totalMoney);
 
-            // Đặt thông tin cho OrderDetail
-            orderDetail.setProduct(product);
-            orderDetail.setNumberOfProducts(quantity);
-            // Các trường khác của OrderDetail nếu cần
-            orderDetail.setPrice(product.getPrice());
-
-            // Thêm OrderDetail vào danh sách
-            orderDetails.add(orderDetail);
-        }
-
+                return orderDetail;
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }).collect(Collectors.toList());
 
         // Lưu danh sách OrderDetail vào cơ sở dữ liệu
         orderDetailRepository.saveAll(orderDetails);
+
         return order;
     }
+
 
     @Override
     public Order getOrder(Long id) {
@@ -130,5 +147,35 @@ public class OrderService implements IOrderService{
     @Override
     public Page<Order> getOrdersByKeyword(String keyword, Pageable pageable) {
         return orderRepository.findByKeyword(keyword, pageable);
+    }
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
+    public List<ChartTotalResponse> getTotalMoneyByMonth(int year) {
+        List<Object[]> resultList = entityManager.createQuery(
+                        "SELECT MONTH(o.orderDate) AS month, SUM(o.totalMoney) AS totalMoney " +
+                                "FROM Order o " +
+                                "WHERE YEAR(o.orderDate) = :year " +
+                                "AND o.status = 'completed' " +
+                                "GROUP BY MONTH(o.orderDate)")
+                .setParameter("year", year)
+                .getResultList();
+
+        List<ChartTotalResponse> chartTotalResponses = resultList.stream()
+                .map(result -> new ChartTotalResponse((int) result[0], (double) result[1]))
+                .collect(Collectors.toList());
+
+        return chartTotalResponses;
+    }
+
+    @Transactional(readOnly = true)
+    public Long getTotalOrdersByMonth(int month, int year) {
+        return orderRepository.getTotalOrdersByMonth(month, year);
+    }
+
+    @Transactional(readOnly = true)
+    public Double getTotalMoney(int month, int year) {
+        return orderRepository.getTotalMoney(month, year);
     }
 }

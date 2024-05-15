@@ -35,6 +35,9 @@ public class OrderDTO {
 
     private String address;
 
+    @JsonProperty("status")
+    private String status;
+
     private String note;
 
     @JsonProperty("total_money")

@@ -1,6 +1,7 @@
 package com.project.shopapp.repositories;
 
 import com.project.shopapp.models.Product;
+import jakarta.persistence.EntityManager;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.*;
 import org.springframework.data.jpa.repository.Query;
@@ -19,9 +20,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Page<Product> searchProducts
             (@Param("categoryId") Long categoryId,
              @Param("keyword") String keyword, Pageable pageable);
+
     @Query("SELECT p FROM Product p LEFT JOIN FETCH p.productImages WHERE p.id = :productId")
     Optional<Product> getDetailProduct(@Param("productId") Long productId);
 
     @Query("SELECT p FROM Product p WHERE p.id IN :productIds")
     List<Product> findProductsByIds(@Param("productIds") List<Long> productIds);
+
+    @Query("SELECT p FROM Product p ORDER BY p.createdAt DESC")
+    List<Product> findNewestProducts(Pageable pageable);
 }

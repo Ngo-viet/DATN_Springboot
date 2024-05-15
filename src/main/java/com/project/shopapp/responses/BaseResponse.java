@@ -2,6 +2,8 @@ package com.project.shopapp.responses;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.project.shopapp.exceptions.CustomLocalDateTimeDeserializer;
 import jakarta.persistence.MappedSuperclass;
 import lombok.*;
 
@@ -15,10 +17,12 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class BaseResponse {
     @JsonProperty("created_at")
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy/MM/dd", shape = JsonFormat.Shape.STRING)
     private LocalDateTime createdAt;
 
-    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss", shape = JsonFormat.Shape.STRING)
     @JsonProperty("updated_at")
+    @JsonFormat(pattern = "yyyy/MM/dd", shape = JsonFormat.Shape.STRING)
+    @JsonDeserialize(using = CustomLocalDateTimeDeserializer.class)
     private LocalDateTime updatedAt;
 }
