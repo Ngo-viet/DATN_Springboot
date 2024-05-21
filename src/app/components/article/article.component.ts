@@ -102,6 +102,10 @@ export class ArticleComponent implements OnInit {
     this.currentImageIndex = index;
   }
 
+  navigateToArticleDetail(articleId: number): void {
+    this.router.navigate(['/articles', articleId]);
+  }
 
+ 
 
 }

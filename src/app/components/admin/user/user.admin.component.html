@@ -10,7 +10,7 @@
     </nav>
     <nav>
       <div>
-        <button class="btn btn-success" (click)="insertUser()">Thêm mới +</button>
+        <button class="btn btn-success" (click)="insertUser()">Thêm mới</button>
       </div>
     </nav>
   </div>
@@ -51,6 +51,7 @@
                           'btn-danger': user.is_active,
                           'btn-success': !user.is_active
                         }" (click)="toggleUserStatus(user)">
+                           <!-- Thêm biểu tượng "Trash" -->
                           {{ user.is_active ? 'Xóa' : 'Unblock người dùng' }}
                         </button>
                       <button class="btn btn-primary" (click)="resetPassword(user.id)">
@@ -64,8 +65,6 @@
             </table>
           </div>
         </div>
-
-
       </div>
     </div>
   </section>

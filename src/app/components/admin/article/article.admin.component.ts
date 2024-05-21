@@ -14,7 +14,7 @@ import { environment } from '../../../environments/environment';
 })
 export class ArticleAdminComponent implements OnInit {
     articles: Article[] = [];
-    currentPage: number = 1;
+    currentPage: number = 0;
     itemsPerPage: number = 8;
     pages: number[] = [];
     totalPages:number = 0;
@@ -27,8 +27,8 @@ export class ArticleAdminComponent implements OnInit {
 
   ngOnInit() {
     
-    this.currentPage = Number(localStorage.getItem('currentOrderAdminPage')) || 1;
-    this.getArticles(this.currentPage, this.itemsPerPage);
+    // this.currentPage = Number(localStorage.getItem('currentOrderAdminPage')) || 0;
+    this.getArticles(1, this.itemsPerPage);
   }
   getArticles(page: number, limit: number) {
     this.articleService.getArticles(page, limit).subscribe({

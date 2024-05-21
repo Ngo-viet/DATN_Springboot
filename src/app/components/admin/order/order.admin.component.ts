@@ -2,15 +2,15 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { NgModule } from '@angular/core';
-import {LocalStorageService} from "ngx-webstorage";
+import { LocalStorageService } from "ngx-webstorage";
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
 import { OrderResponse } from '../../../responses/order/order.response';
 import { OrderService } from '../../../services/order.service';
-import { CommonModule,DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ApiResponse } from '../../../responses/api.response';
-import {ToastrService} from "ngx-toastr";
+import { ToastrService } from "ngx-toastr";
 import { ReportService } from '../../../services/report.service';
 
 @Component({
@@ -19,15 +19,15 @@ import { ReportService } from '../../../services/report.service';
   styleUrls: ['./order.admin.component.scss'],
 
 })
-export class OrderAdminComponent implements OnInit{
+export class OrderAdminComponent implements OnInit {
   orders: OrderResponse[] = [];
   currentPage: number = 1;
   itemsPerPage: number = 10;
   pages: number[] = [];
-  totalPages:number = 0;
-  keyword:string = "";
+  totalPages: number = 0;
+  keyword: string = "";
   visiblePages: number[] = [];
-  localStorage?:LocalStorageService;
+  localStorage?: LocalStorageService;
 
   constructor(
     private orderService: OrderService,
@@ -93,7 +93,7 @@ export class OrderAdminComponent implements OnInit{
 
   deleteOrder(id: number) {
     const confirmation = window
-      .confirm('Bạn chắc chắn muôn xóa đơn hàng này ?');
+      .confirm('Bạn chắc chắn muốn xóa đơn hàng này ?');
     if (confirmation) {
       debugger
       this.orderService.deleteOrder(id).subscribe({
@@ -116,22 +116,26 @@ export class OrderAdminComponent implements OnInit{
       });
     }
   }
-  viewDetails(order:OrderResponse) {
+  viewDetails(order: OrderResponse) {
     debugger
     this.router.navigate(['/admin/orders', order.id]);
   }
 
 
   generateExcel() {
-    this.reportService.generateExcel().subscribe(
-      (data: Blob) => {
-        this.downloadFile(data);
-      },
-      error => {
-        console.error('Error downloading the Excel file:', error);
-        // Xử lý lỗi nếu có
-      }
-    );
+    const confirmation = window
+      .confirm('Bạn chắc chắn muốn xuất báo cáo này ?');
+    if (confirmation) {
+      this.reportService.generateExcel().subscribe(
+        (data: Blob) => {
+          this.downloadFile(data);
+        },
+        error => {
+          console.error('Error downloading the Excel file:', error);
+          // Xử lý lỗi nếu có
+        }
+      );
+    }
   }
 
   private downloadFile(data: Blob) {

@@ -1,34 +1,43 @@
-<div>
-  <!-- Form cập nhật thông tin sản phẩm -->
-  <div class="container">
-    <div class="row">
-      <div class="col-md-6 offset-md-3">
-        <h3>Cập nhật mã giảm giá</h3>
-        <form (ngSubmit)="updateCouponCondition()">
-          <div class="form-group">
-            <label for="attribute">Thông tin:</label>
-            <input type="text" id="attribute" [(ngModel)]="updateCouponConditionData.attribute" name="attribute"
-              class="form-control" required>
-          </div>
+<div class="container">
 
-          <div class="form-group mb-3">
-            <label for="operator">Thao tác:</label>
-            <input type="text" id="operator" [(ngModel)]="updateCouponConditionData.operator" name="operator"
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Cập nhật điều kiện mã giảm giá</h4>
+
+      <!-- Multi Columns Form -->
+      <form class="row g-3" (ngSubmit)="updateCouponCondition()">
+        <div class="col-md-6">
+          <label  for="attribute" class="form-label">Thông tin<span style="color: red;"> (*)</span></label>
+          <input type="text" id="attribute" [(ngModel)]="updateCouponConditionData.attribute" name="attribute"
+              class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label for="operator" class="form-label">Thao tác<span style="color: red;"> (*)</span></label>
+          <input type="text" id="operator" [(ngModel)]="updateCouponConditionData.operator" name="operator"
               class="form-control col-md-3" required>
-          </div>
-          <div class="form-group mb-3">
-            <label for="value">Giá trị:</label>
-            <input type="text" id="value" [(ngModel)]="updateCouponConditionData.value" name="value"
+        </div>
+        <div class="col-md-6">
+          <label for="value" class="form-label">Giá trị<span style="color: red;"> (*)</span></label>
+          <input type="text" id="value" [(ngModel)]="updateCouponConditionData.value" name="value"
               class="form-control col-md-3" required>
-          </div>
-          <div class="form-group mb-3">
-            <label for="discountAmount">Giảm giá:</label>
-            <input type="text" id="discountAmount" [(ngModel)]="updateCouponConditionData.discountAmount"
+        </div>
+        <div class="col-md-6">
+          <label for="discountAmount" class="form-label">Giảm giá<span style="color: red;"> (*)</span></label>
+          <input type="text" id="discountAmount" [(ngModel)]="updateCouponConditionData.discountAmount"
               name="discountAmount" class="form-control col-md-3" required>
+        </div>
+        
+        
+        <div class="col-12" >        
+          <div class="" style="text-align: right;">
+            <button style="margin-right: 10px;" type="submit" class="btn btn-primary">Sửa</button>
+            <button type="reset" class="btn btn-secondary" routerLink="/admin/coupons">Quay lại</button>
           </div>
-          <button type="submit" class="btn btn-primary">Cập nhật</button>
-        </form>
-      </div>
+        </div>
+        
+      </form><!-- End Multi Columns Form -->
+
     </div>
   </div>
+
 </div>

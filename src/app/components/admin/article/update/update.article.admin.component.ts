@@ -1,11 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Product } from '../../../../models/product';
-import { ProductService } from '../../../../services/product.service';
-import { CategoryService } from '../../../../services/category.service';
-import { UpdateProductDTO } from '../../../../dtos/product/update.product.dto';
-import {ToastrService} from "ngx-toastr";
-import { Coupon, CouponCondition, UpdateCouponCondition } from '../../../../models/coupon';
+import { ToastrService} from "ngx-toastr";
 import { CouponService } from '../../../../services/coupon.service';
 import { ArticleService } from '../../../../services/article.service';
 import { Article, UpdateArticle } from '../../../../models/article';

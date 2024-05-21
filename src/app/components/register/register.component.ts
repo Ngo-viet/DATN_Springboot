@@ -3,6 +3,7 @@ import {NgForm} from "@angular/forms";
 import {Router} from "@angular/router";
 import {UserService} from "../../services/user.service";
 import {RegisterDTO} from "../../dtos/user/register.dto"; //chuyen man hinh
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -21,7 +22,9 @@ export class RegisterComponent {
   isAccepted: boolean;
   dateOfBirth: Date;
   email: string;
-  constructor( private router: Router, private userService: UserService) {
+  constructor( private router: Router, 
+    private userService: UserService,
+    private toastr: ToastrService) {
     this.phoneNumber = '';
     this.password = '';
     this.retypePassword = '';
@@ -37,39 +40,72 @@ export class RegisterComponent {
     console.log(`Phone typed: ${this.phoneNumber}`);
   }
   register(){
-    const message =
-      `phone: ${this.phoneNumber}` +
-      `password: ${this.password}` +
-      `retypePassword: ${this.retypePassword}` +
-      `fullName: ${this.fullName}` +
-      `address: ${this.address}` +
-      `isAccepted: ${this.isAccepted}` +
-      `dateOfBirth: ${this.dateOfBirth}` ;
-    debugger
+    // const message =
+    //   `phone: ${this.phoneNumber}` +
+    //   `password: ${this.password}` +
+    //   `retypePassword: ${this.retypePassword}` +
+    //   `fullName: ${this.fullName}` +
+    //   `address: ${this.address}` +
+    //   `isAccepted: ${this.isAccepted}` +
+    //   `dateOfBirth: ${this.dateOfBirth}` ;
+    // debugger
 
-    const registerDTO: RegisterDTO = {
-      "fullname": this.fullName,
-      "phone_number": this.phoneNumber,
-      "address": this.address,
-      "password": this.password,
-      "retype_password": this.retypePassword,
-      "date_of_birth": this.dateOfBirth,
-      "facebook_account_id": 0,
-      "email": this.email,
-      "role_id": 1
+    // const registerDTO: RegisterDTO = {
+    //   "fullname": this.fullName,
+    //   "phone_number": this.phoneNumber,
+    //   "address": this.address,
+    //   "password": this.password,
+    //   "retype_password": this.retypePassword,
+    //   "date_of_birth": this.dateOfBirth,
+    //   "facebook_account_id": 0,
+    //   "email": this.email,
+    //   "role_id": 1
+    // }
+    // this.userService.register(registerDTO).subscribe({
+    //   next: (response: any) => {
+    //     debugger
+    //     this.router.navigate(['/login']);
+    //   },
+    //   complete: () => {
+    //     debugger
+    //   },
+    //   error: (error: any) => {
+    //     alert(`Cannot register, error: ${error.error}`)
+    //   }
+    // })
+
+    if (this.registerForm.valid) {
+      const registerDTO: RegisterDTO = {
+        fullname: this.fullName,
+        phone_number: this.phoneNumber,
+        address: this.address,
+        password: this.password,
+        retype_password: this.retypePassword,
+        date_of_birth: this.dateOfBirth,
+        facebook_account_id: 0,
+        email: this.email,
+        role_id: 1
+      };
+
+      this.userService.register(registerDTO).subscribe({
+        next: (response: any) => {
+          this.toastr.success("Đăng ký thành công", "Thành công", {
+            timeOut: 2000
+          });
+          this.router.navigate(['/login']);
+        },
+        error: (error: any) => {
+          console.error("Registration error:", error);
+          this.toastr.error("Đăng ký thất bại", "Thất bại", {
+            timeOut: 2000
+          });
+        }
+      });
+    } else {
+      this.toastr.error("Vui lòng kiểm tra lại thông tin đăng ký", "Lỗi", {
+        timeOut: 2000
+      });
     }
-    this.userService.register(registerDTO).subscribe({
-      next: (response: any) => {
-        debugger
-        this.router.navigate(['/login']);
-      },
-      complete: () => {
-        debugger
-      },
-      error: (error: any) => {
-        alert(`Cannot register, error: ${error.error}`)
-      }
-    })
 
   }
   onDateOfBirthChange(){

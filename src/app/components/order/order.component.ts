@@ -14,6 +14,7 @@ import { CouponList } from '../../models/coupon';
 import { VnPayService } from '../../services/payment.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-order',
@@ -38,7 +39,7 @@ export class OrderComponent implements OnInit {
     note: '',
     status: '',
     total_money: 0,
-    payment_method: 'cod',
+    payment_method: 'orther',
     shipping_method: 'express',
     coupon_code: '',
     cart_items: []
@@ -54,6 +55,7 @@ export class OrderComponent implements OnInit {
     private couponService: CouponService,
     private vnPayService: VnPayService,
     private http: HttpClient,
+    private toastr: ToastrService
   ) {
     // Tạo FormGroup và các FormControl tương ứng
     this.orderForm = this.fb.group({
@@ -64,7 +66,7 @@ export class OrderComponent implements OnInit {
       note: [''],
       couponCode: [''],
       shipping_method: ['express'],
-      payment_method: ['cod']
+      payment_method: ['orther']
     });
   }
 
@@ -155,7 +157,7 @@ export class OrderComponent implements OnInit {
         quantity: cartItem.quantity
       }));
       const couponCode = this.orderForm.get('couponCode')!.value;
-
+      const paymentMethod = this.orderForm.get('payment_method')!.value;
       if (couponCode) {
         this.calculateTotal();
         this.couponService.calculateCouponValue(couponCode, this.totalAmount)
@@ -163,26 +165,33 @@ export class OrderComponent implements OnInit {
             next: (response: any) => {
               this.totalAmount = response.data.result;
               this.couponApplied = true;
-              this.orderData.total_money = this.totalAmount;  
-              console.log(this.orderData.total_money);
-              this.sendOrder();
+              this.orderData.total_money = this.totalAmount;
+              console.log(paymentMethod);
+              if (paymentMethod === 'orther') {
+                this.sendOrderPayment();
+              } else {
+                this.sendOrder();
+              }
             }
           })
-      }else{
+      } else {
         this.orderData.total_money = this.totalAmount;
         console.log(this.orderData.total_money);
-        this.sendOrder();
+        console.log(paymentMethod);
+        if (paymentMethod === 'orther') {
+          this.sendOrderPayment();
+        } else {
+          this.sendOrder();
+        }
       }
-    
+
     } else {
       // Hiển thị thông báo lỗi hoặc xử lý khác
       alert('Dữ liệu không hợp lệ. Vui lòng kiểm tra lại.');
     }
   }
 
-
-  sendOrder() {
-    // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi
+  sendOrderPayment(){
     this.orderService.placeOrder(this.orderData).subscribe({
       next: (response: Order) => {
         debugger;
@@ -194,6 +203,24 @@ export class OrderComponent implements OnInit {
         alert(`Lỗi khi đặt hàng: ${error}`);
       },
     });
+  }
+
+  sendOrder() {
+      this.orderService.placeOrder(this.orderData).subscribe({
+        next: (response: Order) => {
+          this.cartService.cleanCart();
+          this.toastr.success("Đặt hàng thành công", "Thành công", {
+            timeOut: 2000
+          });
+          this.router.navigate(['/']);
+        },
+        error: (error: any) => {
+          debugger;
+          alert(`Lỗi khi đặt hàng: ${error}`);
+        },
+      });
+
+    
   }
 
   /**
@@ -217,10 +244,10 @@ export class OrderComponent implements OnInit {
 
   private processPayment() {
     const totalMoney = this.orderData.total_money; // Lấy tổng tiền từ đơn hàng
-    if (totalMoney !== undefined) {
+    if (totalMoney !== undefined && totalMoney > 0) {
       this.initiateVnPayPayment(totalMoney); // Gửi yêu cầu thanh toán qua VnPay
     } else {
-      console.error('Total money is undefined');
+      alert('Tiền của bạn không đủ!');
     }
   }
 
@@ -239,7 +266,7 @@ export class OrderComponent implements OnInit {
       },
       error: (error: any) => {
         console.log(totalMoney);
-        
+
         alert(`Lỗi khi khởi tạo thanh toán qua VnPay: ${error}`);
       }
     });
@@ -262,7 +289,7 @@ export class OrderComponent implements OnInit {
         }
       );
   }
- 
+
 
 
   decreaseQuantity(index: number): void {

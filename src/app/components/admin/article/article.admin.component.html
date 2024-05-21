@@ -1,16 +1,16 @@
 <div class="pagetitle">
-  <h1>Bài viết</h1>
+  <h1>Tin tức</h1>
   <div style="display: flex; justify-content: space-between; align-items: baseline;">
     <nav>
       <ol class="breadcrumb">
         <li class="breadcrumb-item"><a routerLink="/admin/dashboard">Trang quản lý</a></li>
-        <li class="breadcrumb-item">Quản lý bài viết</li>
-        <li class="breadcrumb-item active">Danh sách bài viết</li>
+        <li class="breadcrumb-item">Quản lý tin tức</li>
+        <li class="breadcrumb-item active">Danh sách tin tức</li>
       </ol>
     </nav>
     <nav>
       <div>
-        <button class="btn btn-success" routerLink="/admin/articles/insert">Thêm mới +</button>
+        <button class="btn btn-success" routerLink="/admin/articles/insert">Thêm mới</button>
       </div>
     </nav>
   </div>
@@ -37,7 +37,7 @@
 
                 <tr *ngFor="let article of articles; let i = index">
                   <td>
-                    {{(currentPage - 1) * itemsPerPage + i + 1}}</td>
+                    {{ i + 1}}</td>
                   <td>{{ article.author }}</td>
                   <td>{{ article.title }}</td>
                   <td><img src="{{ article.url }}" class="rounded-square" alt="Thumbnail" width="100" height="100"></td>
@@ -48,13 +48,9 @@
                       <button class="btn btn-warning" (click)="updateArticle(article.id)" ><i class="fa-solid fa-pen-to-square"></i></button>
                       <button class="btn btn-danger" (click)="deleteArticle(article)"><i class="fa-solid fa-trash"></i></button>
 
-
                     </div>
                   </td>
                 </tr>
-
-
-
               </tbody>
             </table>
             <!-- End Default Table Example -->

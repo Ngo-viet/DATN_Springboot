@@ -62,6 +62,12 @@
               </div>
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
                 <div class="form-group">
+                  <label for="phone_number">Số điện thoại</label>
+                  <input type="phone_number" formControlName="phone_number" class="form-control" id="phone_number" >
+                </div>
+              </div>
+              <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                <div class="form-group">
                   <label for="email">Email</label>
                   <input type="email" formControlName="email" class="form-control" id="email" placeholder="Nhập email">
                 </div>
@@ -71,7 +77,7 @@
                   <label for="address">Địa chỉ</label>
                   <input type="text" formControlName="address" class="form-control" id="address"
                     [class.is-invalid]="userProfileForm.get('address')!.invalid && userProfileForm.get('address')!.touched"
-                    placeholder="Enter phone number">
+                    >
                 </div>
               </div>
               <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
@@ -117,9 +123,10 @@
             <div class="row gutters">
               <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="text-right d-flex justify-content-end">
+                  <button type="button" (click)="save()" id="submit" name="submit" class="btn btn-primary me-2">Lưu</button>
                   <button type="button" routerLink="/" id="submit" name="submit"
-                    class="btn btn-secondary me-2">Hủy</button>
-                  <button type="button" (click)="save()" id="submit" name="submit" class="btn btn-primary">Lưu</button>
+                    class="btn btn-secondary ">Hủy</button>
+                  
                 </div>
               </div>
             </div>

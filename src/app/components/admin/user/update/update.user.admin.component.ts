@@ -17,12 +17,11 @@ import {UpdateUser} from "../../../../dtos/user/update.admin.user.dto";
 })
 
 export class UpdateUserAdminComponent implements OnInit {
-  userId: number;
+  userId: number = 0;
   user: User;
   updateUserData: User;
   token:string = '';
   userResponse?: UserResponse;
-
 
   constructor(
     private userService: UserService,
@@ -31,7 +30,7 @@ export class UpdateUserAdminComponent implements OnInit {
     private toastr: ToastrService,
     private tokenService: TokenService,
   ) {
-    this.userId = 0;
+    
     this.user = {} as User;
     this.updateUserData = {} as User;
 
@@ -39,6 +38,7 @@ export class UpdateUserAdminComponent implements OnInit {
 
   ngOnInit(): void {
     this.token = <string>this.tokenService.getToken();
+    this.userId = Number(this.route.snapshot.paramMap.get('id'));
     this.getUserDetails();
   }
   getUserDetails(): void{
@@ -46,6 +46,7 @@ export class UpdateUserAdminComponent implements OnInit {
       next:(user: User) => {
         this.user = user;
         this.updateUserData = {...user};
+        this.updateUserData.date_of_birth= new Date(user.date_of_birth);
       },
       complete: () => {
 
@@ -61,6 +62,7 @@ export class UpdateUserAdminComponent implements OnInit {
     const updateUserDTO: UpdateUser = {
       fullname: this.updateUserData.fullname,
       address: this.updateUserData.address,
+      phone_number: this.updateUserData.phone_number,
       date_of_birth: this.updateUserData.date_of_birth,
       email: this.updateUserData.email
     };

@@ -6,7 +6,7 @@
         <div class="d-flex justify-content-between align-items-center">
           <h2>Bài viết</h2>
           <ol>
-            <li><a href="index.html">Trang chủ</a></li>
+            <li><a routerLink="/">Trang chủ</a></li>
             <li><a href="blog.html">Bài viết</a></li>
             <li>Chi tiết bài viết</li>
           </ol>
@@ -36,7 +36,7 @@
               </div>
 
               <div class="entry-content">
-                <p>
+                <p style="text-align: justify;">
                   {{article.description}}
                 </p>
                 <div style="margin-top: 30px;" class="entry-img">
@@ -49,6 +49,9 @@
                   </p>
                 </blockquote>
 
+                <p style="text-align: justify;">
+                  {{article.content}}
+                </p>
               </div>       
 
             </article><!-- End blog entry -->
@@ -77,7 +80,7 @@
               <h3 class="sidebar-title">Thương hiệu</h3>
               <div class="sidebar-item categories">
                 <ul *ngFor="let category of categories">
-                  <li><a href="#">{{category.name}}</a></li>
+                  <li><a [routerLink]="['/product-list']" [queryParams]="{categoryId: category.id}" >{{category.name}}</a></li>
                 </ul>
               </div><!-- End sidebar categories-->
 
@@ -85,10 +88,9 @@
               <div class="sidebar-item recent-posts" *ngFor="let article of articles">
                 <div class="post-item clearfix">
                   <img [src]="article.url" alt="">
-                  <h4><a href="">{{article.title}}</a></h4>
+                  <h4><a  (click)="navigateToArticleDetail(article.id)">{{article.title}}</a></h4>
                   <time datetime="2020-01-01">{{article.created_at}}</time>
                 </div>
-
               </div><!-- End sidebar recent posts-->
 
               

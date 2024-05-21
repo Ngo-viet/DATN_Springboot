@@ -50,9 +50,9 @@ export class UploadArticleAdminComponent implements OnInit {
         next: (article: UpdateArticle) => {
           this.article = article;
           this.updateArticle = { ...article };
-          // if (this.article.thumbnail) {
-          //   this.article.thumbnail = `${environment.apiBaseUrl}/products/images/${this.article.thumbnail}`;
-          // }
+          if (this.article.thumbnail) {
+            this.article.thumbnail = `${environment.apiBaseUrl}/products/images/${this.article.thumbnail}`;
+          }
         },
         error: (error: any) => {
           console.error('Error fetching article details:', error);

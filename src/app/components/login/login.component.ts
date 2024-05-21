@@ -8,6 +8,7 @@ import {TokenService} from "../../services/token.service";
 import {RoleService} from "../../services/role.service";
 import {Role} from "../../models/role";
 import {UserResponse} from "../../responses/user/user.response";
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -37,7 +38,8 @@ export class LoginComponent {
     private router: Router,
     private userService: UserService,
     private tokenService: TokenService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(){
@@ -76,6 +78,9 @@ export class LoginComponent {
                 date_of_birth: new Date(response.date_of_birth),
               };
               this.userService.saveUserResponseToLocalStorage(this.userResponse);
+              this.toastr.success("Đăng nhập thành công", "Thành công", {
+                timeOut: 2000
+              });
               if(this.userResponse?.role.id == 2) {
                 this.router.navigate(['/admin']);
               } else if(this.userResponse?.role.name == 'user') {
@@ -87,8 +92,9 @@ export class LoginComponent {
               debugger;
             },
             error: (error: any) => {
-              debugger;
-              alert(error.error.message);
+              this.toastr.error("Số điện thoại hoặc mật khẩu của bạn sai!", "Thất bại", {
+                timeOut: 2000
+              });
             }
           })
         }
@@ -97,8 +103,9 @@ export class LoginComponent {
         debugger;
       },
       error: (error: any) => {
-        debugger;
-        alert(error.error.message);
+        this.toastr.error("Số điện thoại hoặc mật khẩu của bạn sai!", "Thất bại", {
+          timeOut: 2000
+        });
       }
     });
 

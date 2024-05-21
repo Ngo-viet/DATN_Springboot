@@ -198,7 +198,7 @@
     <div class="container " >
       <div class="section-title text-center">
         <h2>Tin tức</h2>
-        <p class="separator">Những blog nổi bật dành cho mọi người </p>
+        <p class="separator">Những tin tức nổi bật dành cho mọi người </p>
       </div>
       <div class="row"  data-aos-delay="100">
         <div class="col-md-6 col-lg-4" *ngFor="let article of articles">
@@ -240,13 +240,13 @@
 </section><!-- End Blog Section -->
 <!-- CONTACT -->
 <section id="contact" class="contact ">
-  <div class="container  mt-4">
+  <!-- <div class="container  mt-4">
     <div class="section-title text-center">
       <h2>Liên hệ</h2>
     </div>
-  </div>
-  <div class="container">
-    <div class="info-wrap mt-5">
+  </div> -->
+  
+    <!-- <div class="info-wrap mt-5">
       <div class="row">
         <div class="col-lg-4 info">
           <i class="fa-solid fa-location-dot"></i>
@@ -264,9 +264,9 @@
           <p>+84 123456789<br>+64 123456789</p>
         </div>
       </div>
-    </div>
+    </div> -->
 
-    <form action="forms/contact.php" method="post" role="form" class="php-email-form">
+    <!-- <form action="forms/contact.php" method="post" role="form" class="php-email-form">
       <div class="row">
         <div class="col-md-6 form-group">
           <input type="text" name="name" class="form-control" id="name" placeholder="Tên của bạn" required>
@@ -282,9 +282,9 @@
         <textarea class="form-control" name="message" rows="5" placeholder="Lời nhắn" required></textarea>
       </div>
       <div class="text-center"><button href="#" style="background: #d63384;" type="submit">Gửi liên hệ</button></div>
-    </form>
-
-  </div>
+    </form> -->
+    <app-contact></app-contact>
+  
 </section><!-- End Contact Section -->
 
 <app-footer></app-footer>

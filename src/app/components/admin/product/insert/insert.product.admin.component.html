@@ -5,21 +5,21 @@
         <h4 class="card-title">Thêm sản phẩm</h4>
 
         <!-- Multi Columns Form -->
-        <form class="row g-3">
+        <div class="row g-3">
           <div class="col-md-6">
-            <label  for="name" class="form-label">Tên sản phẩm</label>
+            <label  for="name" class="form-label">Tên sản phẩm<span style="color: red;"> (*)</span></label>
             <input type="text" id="name" [(ngModel)]="insertProductDTO.name" name="name" class="form-control" required>
           </div>
           <div class="col-md-6">
-            <label for="price" class="form-label">Giá</label>
+            <label for="price" class="form-label">Giá<span style="color: red;"> (*)</span></label>
             <input type="text" id="price" [(ngModel)]="insertProductDTO.price" name="price" class="form-control col-md-3" required>
           </div>
           <div class="col-md-12">
-            <label for="description" class="form-label">Nội dung</label>
+            <label for="description" class="form-label">Nội dung<span style="color: red;"> (*)</span></label>
             <textarea id="description" [(ngModel)]="insertProductDTO.description" name="description" class="form-control" required></textarea>
           </div>
           <div class="col-md-6">
-            <label for="date-of-birth" class="form-label">Thể loại</label>
+            <label for="date-of-birth" class="form-label">Thể loại<span style="color: red;"> (*)</span></label>
             <select id="category" [(ngModel)]="insertProductDTO.category_id" name="category" class="form-control" required>
               <ng-container *ngFor="let category of categories; trackBy: trackCategory">
                 <option [value]="category.id">{{ category.name }}</option>
@@ -33,9 +33,9 @@
 
           <div class="" style="text-align: right;">
             <button style="margin-right: 10px;" type="submit" class="btn btn-primary">Thêm mới</button>
-            <button type="reset" class="btn btn-secondary" routerLink="/admin/products">Hủy</button>
+            <button type="reset" class="btn btn-secondary" routerLink="/admin/products">Quay lại</button>
           </div>
-        </form><!-- End Multi Columns Form -->
+        </div><!-- End Multi Columns Form -->
 
       </div>
     </div>

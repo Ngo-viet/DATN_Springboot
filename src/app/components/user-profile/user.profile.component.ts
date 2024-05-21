@@ -41,6 +41,7 @@ export class UserProfileComponent implements OnInit {
       retype_password: ['', [Validators.minLength(5)]],
       date_of_birth: [Date.now()],
       email: ['', [Validators.minLength(5)]],
+      phone_number: ['', [Validators.minLength(5)]],
     }, {
       validators: this.passwordMatchValidator// Custom validator function for password match
     });
@@ -60,6 +61,7 @@ export class UserProfileComponent implements OnInit {
           fullname: this.userResponse?.fullname ?? '',
           address: this.userResponse?.address ?? '',
           email: this.userResponse?.email ?? '',
+          phone_number: this.userResponse?.phone_number ?? '',
           date_of_birth: this.userResponse?.date_of_birth.toISOString().substring(0, 10),
         });
         this.userService.saveUserResponseToLocalStorage(this.userResponse);
@@ -90,6 +92,7 @@ export class UserProfileComponent implements OnInit {
       const updateUserDTO: UpdateUserDTO = {
         fullname: this.userProfileForm.get('fullname')?.value,
         address: this.userProfileForm.get('address')?.value,
+        phone_number: this.userProfileForm.get('phone_number')?.value,
         password: this.userProfileForm.get('password')?.value,
         retype_password: this.userProfileForm.get('retype_password')?.value,
         date_of_birth: this.userProfileForm.get('date_of_birth')?.value,

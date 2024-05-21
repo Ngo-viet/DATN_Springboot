@@ -1,52 +1,80 @@
-
 <div class="container">
-  <h1>Chi tiết đơn hàng</h1>
 
-  <div class="row">
-    <div class="col-md-6">
-      <h3>Thông tin đơn hàng</h3>
-      <p><strong>Mã đơn hàng:</strong> {{ orderResponse.id }}</p>
-      <p><strong>Họ và tên:</strong> {{ orderResponse.fullname }}</p>
-      <p><strong>Số điện thoại:</strong> {{ orderResponse.phone_number }}</p>
-      <p><strong>Email:</strong> {{ orderResponse.email }}</p>
-      <p><strong>Địa chỉ:</strong> {{ orderResponse.address }}</p>
-      <p><strong>Ghi chú:</strong> {{ orderResponse.note }}</p>
-      <p><strong>Ngày đặt hàng:</strong> {{ orderResponse.order_date | date }}</p>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Cập nhật trạng thái đơn hàng</h4>
 
-      <div class="form-group">
-        <label for="statusSelect"><strong>Trạng thái:</strong></label>
-        <select class="form-control" id="statusSelect"
-                [(ngModel)]="orderResponse.status">
-          <option value="completed">Hoàn thành</option>
-          <option value="not_completed">Chưa hoàn thành</option>
-        </select>
+
+      <div class="row g-3">
+
+
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Mã đơn hàng: <span> {{ orderResponse.id }}</span></label>
+        </div>
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Họ tên: <span> {{ orderResponse.fullname }}</span></label>
+        </div>
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Số điện thoại: <span>{{ orderResponse.phone_number }}</span></label>
+        </div>
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Email: <span>{{ orderResponse.email }}</span></label>
+        </div>
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Địa chỉ nhận: <span> {{ orderResponse.address }}</span></label>
+        </div>
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Ghi chú: <span> {{ orderResponse.note }}</span></label>
+        </div>
+        <div class="col-md-6">
+          <label for="full-name" class="form-label">Ngặt đặt hàng: <span> {{ orderResponse.order_date | date
+              }}</span></label>
+        </div>
+        <div class="col-md-6" style="display: flex; align-items: center;">
+          <label for="statusSelect" class="form-label">Trạng thái<span style="color: red;"> (*)</span></label>
+          <select style="width: 200px;
+          margin-left: 10px;" class="form-control" id="statusSelect" [(ngModel)]="orderResponse.status">
+            <option value="" disabled selected>Chọn trạng thái</option>
+            <option value="completed">Hoàn thành</option>
+            <option value="not_completed">Chưa hoàn thành</option>
+          </select>
+        </div>
+        <h3>Thông tin sản phẩm</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Sản phẩm</th>
+              <th>Giá</th>
+              <th>Số lượng</th>
+              <th>Tổng tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let order_detail of orderResponse.order_details">
+              <td>{{ order_detail.product.name }}</td>
+              <td>
+                <p>{{order_detail.product.price | number:'1.0-0'}}</p>
+              <td>
+                <p>{{order_detail.number_of_products}}</p>
+              </td>
+              <td>{{ order_detail.total_money | number:'1.0-0' }}</td>
+            </tr>
+
+          </tbody>
+        </table>
+
+        <div class="col-12">
+          <div class="" style="text-align: right;">
+            <button style="margin-right: 10px;" type="submit" (click)="saveOrder()" class="btn btn-primary">Cập
+              nhật</button>
+            <button type="reset" class="btn btn-secondary" routerLink="/admin/orders">Quay lại</button>
+          </div>
+        </div>
       </div>
+
+
     </div>
-    <h3>Thông tin sản phẩm</h3>
-    <table class="table">
-      <thead>
-      <tr>
-        <th>Sản phẩm</th>
-        <th>Giá</th>
-        <th>Số lượng</th>
-        <!--<th>Total</th>-->
-      </tr>
-      </thead>
-      <tbody>
-
-          <tr *ngFor="let order_detail of orderResponse.order_details">
-            <td>{{ order_detail.product.name }}</td>
-            <td>
-              <p>{{order_detail.product.price}}</p>
-            <td>
-              <p>{{order_detail.number_of_products}}</p>
-            </td>
-            <!--<td>{{ order_detail.total_money }}</td>-->
-          </tr>
-
-      </tbody>
-    </table>
-    <button class="btn btn-primary col-md-2"
-            (click)="saveOrder()">Xác nhận</button>
   </div>
+
 </div>

@@ -120,7 +120,7 @@ export class UserAdminComponent implements OnInit{
   toggleUserStatus(user: UserResponse) {
     let confirmation: boolean;
     if (user.is_active) {
-      confirmation = window.confirm('Bạn chă chắn muốn xóa người dùng?');
+      confirmation = window.confirm('Bạn chắc chắn muốn xóa người dùng?');
     } else {
       confirmation = window.confirm('Are you sure you want to enable this user?');
     }

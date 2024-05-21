@@ -13,9 +13,9 @@
   </div>
   <div style="display: flex;  justify-content: space-between;">
     <div class="form-group col-lg-8" style=" display: flex; margin-bottom: 10px; justify-items: center;">
-      <label style="width: 100px; align-self: center;" for="productSelect">Sản phẩm:</label>
-      <select class="form-control" id="productSelect" (change)="onProductSelect($event)">
-        <option value="" disabled selected>Chọn sản phẩm</option>
+      <label style="width: 100px; align-self: center;" for="productSelect">Đánh giá:</label>
+      <select class="form-select" id="productSelect" (change)="onProductSelect($event)">
+        <option value="" disabled selected>Chọn đánh giá</option>
         <option *ngFor="let product of products" [value]="product.id">{{ product.name }}</option>
       </select>
     </div>

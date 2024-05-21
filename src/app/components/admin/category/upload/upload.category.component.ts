@@ -51,9 +51,9 @@ export class UploadCategoryAdminComponent implements OnInit {
         next: (category: UpdateCategory) => {
           this.category = category;
           this.updateCategory = { ...category };
-          // if (this.article.thumbnail) {
-          //   this.article.thumbnail = `${environment.apiBaseUrl}/products/images/${this.article.thumbnail}`;
-          // }
+          if (this.category.thumbnail) {
+            this.category.thumbnail = `${environment.apiBaseUrl}/products/images/${this.category.thumbnail}`;
+          }
         },
         error: (error: any) => {
           console.error('Error fetching article details:', error);

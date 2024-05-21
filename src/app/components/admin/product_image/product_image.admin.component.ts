@@ -88,6 +88,9 @@ export class ProductImageAdminComponent implements OnInit {
       }
     });
   }
+  reloadPage() {
+    window.location.reload();
+  }
 
   getProducts( keyword: string, selectedCategoryId: number, page: number, limit: number) {
     this.productService.getProducts(keyword, selectedCategoryId, page, limit).subscribe({
@@ -152,12 +155,13 @@ export class ProductImageAdminComponent implements OnInit {
   }
 
   deleteImage(imageId: number) {
-    if (confirm('Are you sure you want to remove this image?')) {
+    if (confirm('Bạn chắc chắn muốn xóa hình ảnh?')) {
       this.productService.deleteProductImage(imageId).subscribe({
         next: () => {
           this.toastr.success("Xóa ảnh thành công", "Thành công", {
             timeOut: 2000
           });
+          this.router.navigate(['/admin/product_images']);
         },
         error: (error) => {
           this.toastr.error("Xóa ảnh thất bại", "Thất bại", {

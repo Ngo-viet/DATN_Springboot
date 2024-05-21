@@ -1333,8 +1333,8 @@ body {
   }
   
   .store-grid li.active {
-    background-color: #D10024;
-    border-color: #D10024;
+    background-color: #d63384;
+    border-color: #d63384;
     color: #FFF;
     cursor: default;
   }
@@ -1965,11 +1965,11 @@ body {
   
   .newsletter form .newsletter-btn {
     width: 160px;
-    height: 40px;
+    height: 42px;
     font-weight: 700;
-    background: #d63384;
-    color: #FFF;
-    border: none;
+    background: #ffffff;
+    color: #d63384;
+    border: 2px solid;
     border-radius: 0px 40px 40px 0px;
   }
   

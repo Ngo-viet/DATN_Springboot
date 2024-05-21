@@ -89,7 +89,8 @@ export class OrderDetailComponent implements OnInit{
 
 
   goToHomePage() {
-    this.router.navigate(['/']); // Điều hướng về trang chủ
+    this.router.navigate(['/']);
+    window.scrollTo(0, 0); 
   }
 
 

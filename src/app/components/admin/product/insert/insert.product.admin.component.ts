@@ -57,7 +57,7 @@ export class InsertProductAdminComponent implements OnInit {
     // Retrieve selected files from input element
     const files = event.target.files;
     // Limit the number of selected files to 5
-    if (files.length > 5) {
+    if (files.length > 3) {
       alert('Please select a maximum of 5 images.');
       return;
     }else{

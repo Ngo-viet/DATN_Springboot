@@ -158,7 +158,7 @@ export class UpdateProductAdminComponent implements OnInit {
     })
   }
   deleteImage(productImage: ProductImage) {
-    if (confirm('Are you sure you want to remove this image?')) {
+    if (confirm('Bạn chắc chắn muốn xóa hình ảnh trên?')) {
       // Call the removeImage() method to remove the image
       this.productService.deleteProductImage(productImage.id).subscribe({
         next:(productImage: ProductImage) => {

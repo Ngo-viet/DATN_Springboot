@@ -12,19 +12,23 @@
       <div>
         <button class="btn btn-success" (click)="insertImages()">
           <span style="vertical-align: middle;">Thêm mới</span>
-          <i style="font-size: 12px; vertical-align: middle; margin-left: 5px;" class="fa-solid fa-plus"></i>
+          
         </button>
       </div>
     </nav>
 </div><!-- End Page Title -->
 <form #searchForm="ngForm" (ngSubmit)="searchProductImages()">
-  <div class="form-group">
-    <label for="productId">Chọn sản phẩm:</label>
-    <div style="display: flex; margin-bottom: 15px;">
-      <select style="width: 500px;" class="form-control" id="productId" name="productId" [(ngModel)]="selectedProductId" required>
+  <div class="form-group" style="display: flex; justify-content: space-between;">
+    
+    <div style="display: flex; margin-bottom: 15px; align-items: center;">
+      <label for="productId">Chọn sản phẩm:</label>
+      <select style="width: 500px;" class="form-select" id="productId" name="productId" [(ngModel)]="selectedProductId" required>
         <option *ngFor="let product of products" [value]="product.id">{{ product.name }}</option>
       </select>
       <button style="margin-left: 15px;" type="submit" class="btn btn-primary">Tìm kiếm</button>
+    </div>
+    <div>
+      <button type="submit" (click)="reloadPage()" class="btn btn-primary">Reload</button>
     </div>
     
   </div>
