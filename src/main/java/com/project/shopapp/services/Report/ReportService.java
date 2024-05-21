@@ -134,7 +134,9 @@ public class ReportService {
             Cell totalMoneyCell = dataRow.createCell(10);
             totalMoneyCell.setCellValue(order.getTotalMoney());
             DataFormat format = workbook.createDataFormat();
-            dataStyle.setDataFormat(format.getFormat("#,##0.00"));
+            CellStyle totalMoneyCellStyle = workbook.createCellStyle(); // Tạo một CellStyle mới
+            totalMoneyCellStyle.setDataFormat(format.getFormat("#,##0.00")); // Đặt định dạng cho CellStyle
+            totalMoneyCell.setCellStyle(totalMoneyCellStyle);
             totalMoneyCell.setCellStyle(borderedDataStyle);
 
             dataRowIndex++;

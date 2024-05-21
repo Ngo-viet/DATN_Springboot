@@ -153,18 +153,21 @@ public class UserController {
     }
 
     @PutMapping("/details/{userId}")
-    public ResponseEntity<ResponseObject> updatUserDetails(
+    public ResponseEntity<ResponseObject> updateUserDetails(
             @PathVariable Long userId,
             @RequestBody UpdateUserDTO updatedUserDTO,
             @RequestHeader("Authorization") String authorizationHeader
-    )throws Exception {
+    ) throws Exception {
         String extractedToken = authorizationHeader.substring(7);
         User user = userService.getUserDetailsFromToken(extractedToken);
 
-        //Kiem tra id
-        if (user.getId() != userId){
+        boolean isAdmin = user.getAuthorities().stream().anyMatch(authority  -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+        // Check if user is an admin or the user is updating their own details
+        if (!isAdmin && user.getId() != userId) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
         User updatedUser = userService.updatedUser(userId, updatedUserDTO);
         return ResponseEntity.ok().body(
                 ResponseObject.builder()
@@ -200,7 +203,7 @@ public class UserController {
     @PutMapping("/reset-password/{userId}")
     public ResponseEntity<ResponseObject> resetPassword(@Valid @PathVariable Long userId){
         try {
-            String newPassword = UUID.randomUUID().toString().substring(0, 5); // Tạo mật khẩu mới
+            String newPassword = UUID.randomUUID().toString().substring(0, 6);
             userService.resetPassword(userId, newPassword);
             return ResponseEntity.ok(ResponseObject.builder()
                     .message("Reset password successfully")

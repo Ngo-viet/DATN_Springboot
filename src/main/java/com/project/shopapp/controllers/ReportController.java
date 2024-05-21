@@ -17,7 +17,7 @@ public class ReportController {
     public void generateExcel(HttpServletResponse response) throws Exception{
         response.setContentType("application/octet-stream");
         String headerKey = "Content-Disposition";
-        String headerValue = "attachment;filename=orders.xls";
+        String headerValue = "attachment;filename=bao_cao.xls";
         response.setHeader(headerKey, headerValue);
         reportService.generateExcel(response);
     }

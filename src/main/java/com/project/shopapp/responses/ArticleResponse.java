@@ -18,6 +18,7 @@ public class ArticleResponse extends BaseResponse{
     private String title;
     private String description;
     private String thumbnail;
+    private String content;
     public static ArticleResponse fromArticle(Article article){
         ArticleResponse articleResponse = ArticleResponse.builder()
                 .id(article.getId())
@@ -25,6 +26,7 @@ public class ArticleResponse extends BaseResponse{
                 .title(article.getTitle())
                 .description(article.getDescription())
                 .thumbnail(article.getThumbnail())
+                .content(article.getContent())
                 .build();
         articleResponse.setCreatedAt(article.getCreatedAt());
         return articleResponse;

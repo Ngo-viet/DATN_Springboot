@@ -25,5 +25,6 @@ public class Article extends BaseEntity{
 
     private String author;
 
-
+    @Lob
+    private String content;
 }
