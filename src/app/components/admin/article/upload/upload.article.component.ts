@@ -101,13 +101,16 @@ export class UploadArticleAdminComponent implements OnInit {
     if (this.file !== null) {
       this.articleService.uploadThumbnail(this.articleId, this.file).subscribe({
         next: (response: any) => {
-          console.log('Thumbnail uploaded successfully:', response);
-          // Reload article details to reflect the new thumbnail
+          this.toastr.success("Cập nhật ảnh thành công!", "Thành công", {
+            timeOut: 2000
+          });
           this.getArticleDetails();
           this.router.navigate(['/admin/articles/update/', this.articleId ]);
         },
         error: (error: any) => {
-          console.error('Error uploading thumbnail:', error);
+          this.toastr.error("Cập nhật ảnh thất bại!", "Thất bại", {
+            timeOut: 2000
+          });
         }
       });
     }

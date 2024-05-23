@@ -36,6 +36,7 @@
               <th scope="col">Tên sản phẩm</th>
               <th scope="col">Giá</th>
               <th scope="col">Hình ảnh</th>
+              <th scope="col">Thương hiệu</th>
               <th scope="col">Nội dung</th>
               <th scope="col">Hành động</th>
             </tr>
@@ -50,6 +51,7 @@
                   <td><img src="{{ product.url }}"
                       class="rounded-square" alt="Thumbnail"
                       width="100" height="100"></td>
+                      <td>{{ product.category_id  }}</td>
                   <td>{{ product.description  }}</td>
                   <td>
                     <div style="display: flex; gap: 10px;">

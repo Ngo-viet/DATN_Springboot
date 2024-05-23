@@ -162,6 +162,7 @@ export class ProductImageAdminComponent implements OnInit {
             timeOut: 2000
           });
           this.router.navigate(['/admin/product_images']);
+          this.reloadPage();
         },
         error: (error) => {
           this.toastr.error("Xóa ảnh thất bại", "Thất bại", {

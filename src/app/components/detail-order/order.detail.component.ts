@@ -53,11 +53,11 @@ export class OrderDetailComponent implements OnInit{
         if (Array.isArray(response) && response.length > 0) {
           this.orders = response.map((order: any) => ({
             id: order.id,
-            user_id: order.user.id,
-            fullname: order.user.fullName,
-            email: order.user.email,
-            phone_number: order.user.phoneNumber,
-            address: order.user.address,
+            user_id: order.id,
+            fullname: order.fullName,
+            email: order.email,
+            phone_number: order.phoneNumber,
+            address: order.address,
             note: order.note,
             order_date: new Date(order.orderDate[0], order.orderDate[1] - 1, order.orderDate[2]),
             order_details: order.orderDetails.map((orderDetail: any) => ({

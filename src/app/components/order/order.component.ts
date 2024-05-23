@@ -39,7 +39,7 @@ export class OrderComponent implements OnInit {
     note: '',
     status: '',
     total_money: 0,
-    payment_method: 'orther',
+    payment_method: 'other',
     shipping_method: 'express',
     coupon_code: '',
     cart_items: []
@@ -66,7 +66,7 @@ export class OrderComponent implements OnInit {
       note: [''],
       couponCode: [''],
       shipping_method: ['express'],
-      payment_method: ['orther']
+      payment_method: ['other']
     });
   }
 
@@ -139,7 +139,7 @@ export class OrderComponent implements OnInit {
 
 
   placeOrder() {
-    this.applyCoupon();
+    // this.applyCoupon();
 
     if (this.orderForm.errors == null) {
       // Gán giá trị từ form vào đối tượng orderData
@@ -158,6 +158,7 @@ export class OrderComponent implements OnInit {
       }));
       const couponCode = this.orderForm.get('couponCode')!.value;
       const paymentMethod = this.orderForm.get('payment_method')!.value;
+      console.log(paymentMethod);
       if (couponCode) {
         this.calculateTotal();
         this.couponService.calculateCouponValue(couponCode, this.totalAmount)
@@ -166,8 +167,9 @@ export class OrderComponent implements OnInit {
               this.totalAmount = response.data.result;
               this.couponApplied = true;
               this.orderData.total_money = this.totalAmount;
+              const paymentMethod = this.orderForm.get('payment_method')!.value;
               console.log(paymentMethod);
-              if (paymentMethod === 'orther') {
+              if (paymentMethod === 'other') {
                 this.sendOrderPayment();
               } else {
                 this.sendOrder();
@@ -178,7 +180,7 @@ export class OrderComponent implements OnInit {
         this.orderData.total_money = this.totalAmount;
         console.log(this.orderData.total_money);
         console.log(paymentMethod);
-        if (paymentMethod === 'orther') {
+        if (paymentMethod === 'other') {
           this.sendOrderPayment();
         } else {
           this.sendOrder();
@@ -200,7 +202,7 @@ export class OrderComponent implements OnInit {
       },
       error: (error: any) => {
         debugger;
-        alert(`Lỗi khi đặt hàng: ${error}`);
+        alert(`Lỗi khi đặt hàng vui lòng nhập đầy đủ thông tin`);
       },
     });
   }
@@ -216,31 +218,14 @@ export class OrderComponent implements OnInit {
         },
         error: (error: any) => {
           debugger;
-          alert(`Lỗi khi đặt hàng: ${error}`);
+          alert(`Lỗi khi đặt hàng vui lòng nhập đầy đủ thông tin`);
         },
       });
 
     
   }
 
-  /**
-   * // Dữ liệu hợp lệ, bạn có thể gửi đơn hàng đi
-      this.orderService.placeOrder(this.orderData).subscribe({
-        next: (response: Order) => {
-          debugger;
 
-          this.cartService.cleanCart();
-          this.processPayment();
-        },
-        // complete: () => {
-        //   debugger;
-        //   this.calculateTotal();
-        // },
-        error: (error: any) => {
-          debugger;
-          alert(`Lỗi khi đặt hàng: ${error}`);
-        },
-   */
 
   private processPayment() {
     const totalMoney = this.orderData.total_money; // Lấy tổng tiền từ đơn hàng
@@ -254,10 +239,7 @@ export class OrderComponent implements OnInit {
   private initiateVnPayPayment(totalMoney: number) {
     this.vnPayService.initiatePayment(totalMoney).subscribe({
       next: (response: any) => {
-        // Mở đường dẫn thanh toán được trả về từ API VnPay trong một cửa sổ mới
         if (response && response.code === 200 && response.data && response.data.paymentUrl) {
-          // Mở URL thanh toán trong cửa sổ mới
-          // window.open(response.data.paymentUrl, '_blank');
           window.location.href = response.data.paymentUrl;
         } else {
           console.error('Invalid API response:', response);

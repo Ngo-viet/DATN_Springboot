@@ -60,8 +60,10 @@ export class UpdateProductAdminComponent implements OnInit {
   getProductDetails(): void {
     this.productService.getDetailProduct(this.productId).subscribe({
       next: (product: Product) => {
-
         this.product = product;
+        this.updatedProduct.category_id = product.category_id;
+        console.log(this.updatedProduct.category_id);
+        
         this.updatedProduct = { ...product };
         this.updatedProduct.product_images.forEach((product_image:ProductImage) => {
           product_image.image_url = `${environment.apiBaseUrl}/products/images/${product_image.image_url}`;
@@ -164,6 +166,7 @@ export class UpdateProductAdminComponent implements OnInit {
         next:(productImage: ProductImage) => {
           // location.reload();
           console.log(productImage);
+          this.getProductDetails();
         },
         error: (error) => {
           // Handle the error while uploading images

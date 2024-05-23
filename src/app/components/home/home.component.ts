@@ -140,4 +140,9 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/articles', createdId]);
     window.scrollTo(0, 0); 
   }
+
+  onClickAll(){
+    this.router.navigate(['/product-list']);
+    window.scrollTo(0, 0); 
+  }
 }

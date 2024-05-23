@@ -37,12 +37,11 @@
           </div>
         </div>
         <div class="col-md-6">
-          <label for="date-of-birth" class="form-label">Thể loại<span style="color: red;"> (*)</span></label>
-          <select id="category" [(ngModel)]="updatedProduct.category_id" name="category"  class="form-control" required>
-            @for(category of categories; track category.id) {
-            <option [value]="category.id">{{ category.name }}
+          <label for="category_id" class="form-label">Thể loại<span style="color: red;"> (*)</span></label>
+          <select id="category_id" [(ngModel)]="updatedProduct.category_id" name="category_id" class="form-select" required>
+            <option *ngFor="let category of categories" [ngValue]="category.id">
+              {{ category.name }}
             </option>
-            }
           </select>
         </div>
         <div class="col-6">

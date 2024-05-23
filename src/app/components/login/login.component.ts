@@ -110,4 +110,9 @@ export class LoginComponent {
     });
 
   }
+
+
+  showAlert(platform: string): void {
+    alert(`${platform} đăng nhập chưa được hỗ trợ.`);
+  }
 }

@@ -5,7 +5,7 @@
         <h4 class="card-title">Thêm thể loại</h4>
 
         <!-- Multi Columns Form -->
-        <form class="row g-3">
+        <div class="row g-3">
           <div class="col-md-12">
             <label for="name" class="form-label">Tên thể loại<span style="color: red;"> (*)</span></label>
             <input type="text" class="form-control" [(ngModel)]="insertCategoryDTO.name" name="name"
@@ -15,7 +15,7 @@
             <button style="margin-right: 10px;" type="submit" class="btn btn-primary">Thêm mới</button>
             <button type="reset" class="btn btn-secondary" routerLink="/admin/categories">Quay lại</button>
           </div>
-        </form><!-- End Multi Columns Form -->
+        </div><!-- End Multi Columns Form -->
 
       </div>
     </div>

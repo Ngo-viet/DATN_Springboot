@@ -102,13 +102,16 @@ export class UploadCategoryAdminComponent implements OnInit {
     if (this.file !== null) {
       this.categoryService.uploadThumbnail(this.categoryId, this.file).subscribe({
         next: (response: any) => {
-          console.log('Thumbnail uploaded successfully:', response);
-          // Reload article details to reflect the new thumbnail
+          this.toastr.success("Cập nhật ảnh thành công!", "Thành công", {
+            timeOut: 2000
+          });
           this.getCategoryDetails();
           this.router.navigate(['/admin/categories/update/', this.categoryId ]);
         },
         error: (error: any) => {
-          console.error('Error uploading thumbnail:', error);
+          this.toastr.error("Cập nhật ảnh thất bại!", "Thất bại", {
+            timeOut: 2000
+          });
         }
       });
     }
