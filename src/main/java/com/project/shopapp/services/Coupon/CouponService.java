@@ -43,19 +43,18 @@ public class CouponService implements ICouponService {
             double percentDiscount = Double.valueOf(
                     String.valueOf(condition.getDiscountAmount()));
 
-            if (attribute.equals("minimum_amount")) {
+            if (attribute.equals("amount")) {
                 if (operator.equals(">") && updatedTotalAmount > Double.parseDouble(value)) {
                     discount += updatedTotalAmount * percentDiscount / 100;
                 }
-            } else if (attribute.equals("applicable_date")) {
+            } else if (attribute.equals("date")) {
                 LocalDate applicableDate = LocalDate.parse(value);
                 LocalDate currentDate = LocalDate.now();
-                if (operator.equalsIgnoreCase("BETWEEN")
+                if (operator.equalsIgnoreCase("=")
                         && currentDate.isEqual(applicableDate)) {
                     discount += updatedTotalAmount * percentDiscount / 100;
                 }
             }
-            //còn nhiều nhiều điều kiện khác nữa
             updatedTotalAmount = updatedTotalAmount - discount;
         }
         return discount;
